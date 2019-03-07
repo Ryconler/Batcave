@@ -9,7 +9,8 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <router-link to="/"><img src="./assets/images/logo1.png" class="navbar-brand" width="85px"></router-link>
+          <router-link to="/"><img src="./assets/images/logo1.png" class="navbar-brand" style="width: 85px;">
+          </router-link>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -26,21 +27,27 @@
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown" v-if="user">
               <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
-                <img src="./assets/images/head_portrait.png" style="width: 20px;height: 20px; margin-right: 10px">{{ user.username }}<b class="caret"></b>
+                <img src="./assets/images/head_portrait.png" style="width: 20px;height: 20px; margin-right: 10px">{{
+                user.username }}<b class="caret"></b>
               </a>
               <ul class="dropdown-menu">
                 <li>
-                  <router-link to="/my/likes">我的喜欢<img src="./assets/images/liked.png" width="30px"></router-link>
+                  <router-link to="/my/likes">我的喜欢<img src="./assets/images/liked.png" style="width: 30px;">
+                  </router-link>
                 </li>
                 <li>
-                  <router-link to="/my/urls">我的链接<img src="./assets/images/liked.png" width="30px"></router-link>
+                  <router-link to="/my/urls">我的链接<img src="./assets/images/liked.png" style="width: 30px;">
+                  </router-link>
                 </li>
                 <li>
-                  <router-link to="/my/files">我的文件<img src="./assets/images/liked.png" width="30px"></router-link>
+                  <router-link to="/my/files">我的文件<img src="./assets/images/liked.png" style="width: 30px;">
+                  </router-link>
                 </li>
-                <li><a href="javascript:void(0);">修改密码&nbsp;<img src="./assets/images/lock.png" width="15px"
-                                                                 height="13px"></a></li>
-                <li><a href="javascript:void(0);">注销</a></li>
+                <li>
+                  <router-link to="/change-password">修改密码&nbsp;<img src="./assets/images/lock.png" style="width: 15px;">
+                  </router-link>
+                </li>
+                <li><a href="javascript:void(0);" @click="logout()">注销</a></li>
               </ul>
             </li>
             <li v-if="!user">
@@ -54,10 +61,13 @@
       </div>
     </div>
     <div class="container">
-      <div class="alert alert-warning" v-for="msg of errMessages" v-if="errMessages.length">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>{{ msg }}
+      <div class="alert alert-warning" v-for="msg of errorMessages" v-if="errorMessages.length">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ msg }}
       </div>
-      <router-view></router-view>
+      <router-view
+        @addErrMsg="addErrMsg"
+      ></router-view>
     </div>
   </div>
 </template>
@@ -71,7 +81,15 @@
           id: 111,
           username: '朱星杰'
         },
-        errMessages: []
+        errorMessages: []
+      }
+    },
+    methods: {
+      logout() {
+        this.user = null
+      },
+      addErrMsg(msg) {
+        this.errorMessages.push(msg)
       }
     }
   }

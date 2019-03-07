@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import Home from '../components/Home' // 主页
 import Login from '../components/Login' // 登录
 import Register from '../components/Register' // 注册
+import ChangePassword from '../components/ChangePassword' // 更改密码
 import URLs from '../components/URLs' // 所有链接
 import URLShare from '../components/URLShare' // 链接分享
 import Files from '../components/Files' // 所有文件
@@ -29,6 +30,10 @@ export default new Router({
     {
       path: '/register',
       component: Register
+    },
+    {
+      path: '/change-password',
+      component: ChangePassword
     },
     {
       path: '/urls',
