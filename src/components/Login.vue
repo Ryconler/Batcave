@@ -5,15 +5,15 @@
     </div>
     <form>
       <div class="form-group">
-        <label for="username">用户名或邮箱</label>
-        <input type="text" class="form-control" id="username">
+        <label for="username">用户名</label>
+        <input v-model="username" type="text" class="form-control" id="username">
       </div>
       <div class="form-group">
         <label for="Password">密码</label>
-        <input type="password" class="form-control" id="Password">
+        <input v-model="password" type="password" class="form-control" id="Password">
       </div>
-      <button type="reset" class="btn btn-default" id="reset">重置</button>
-      <button type="submit" class="btn btn-primary" id="submit" @click.prevent="submit()">登录</button>
+      <button type="reset" class="btn btn-default" id="reset" @click.prevent="reset()">重置</button>
+      <button type="submit" class="btn btn-primary" id="submit" @click.prevent="submit()" :disabled="!(this.username&&this.password)">登录</button>
     </form>
     <br>
     <p>还没有账号？
@@ -26,9 +26,24 @@
 <script>
   export default {
     name: "Login",
+    data(){
+      return{
+        username: '',
+        password: ''
+      }
+    },
     methods:{
-      submit(){
-        console.log('xx');
+      reset(){
+        [this.username,this.password] = ['','']
+      },
+      submit() {
+        if (this.username && this.password) {
+          const loginInfo = {
+            username: this.username,
+            password: this.password
+          }
+          console.log(loginInfo);
+        }
       }
     }
   }
