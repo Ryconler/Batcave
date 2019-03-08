@@ -148,7 +148,17 @@
             email: this.email,
             password: this.password,
           }
-          console.log(registerInfo);
+          this.$axios.post('/api/register',registerInfo)
+            .then(res=> {
+              this.$emit('setUser',res.data.user)
+              this.$emit('setCookie','username',registerInfo.username)  // 存储cookie
+              this.$emit('setCookie','password',registerInfo.password)
+              this.$emit('clearErrMsg')
+              this.$router.replace('/')
+            })
+            .catch(err=>{
+              this.$emit('addErrMsg',err.response.data.message)
+            })
         }
       }
     },

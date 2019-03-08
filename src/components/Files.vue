@@ -35,30 +35,18 @@
     components: {Pagination},
     data() {
       return {
-        files: [
-          {
-            id: 1,
-            type: '图片',
-            title: '高清图片xxx',
-            owner: {
-              id: 111,
-              username: '朱星杰'
-            },
-            date: '2019-03-07 15:06:12'
-          },
-          {
-            id: 2,
-            type: '压缩包',
-            title: '压缩包666',
-            owner: {
-              id: 520,
-              username: '冯成城'
-            },
-            date: '2019-03-06 12:01:55'
-          }
-        ],
+        files: [],
         myLikeFiles: [1]
       }
+    },
+    mounted() {
+      this.$axios.get('/api/files/limit?page=1')
+        .then(res=>{
+          this.files = res.data.files
+        })
+        .catch(err=>{
+          console.log(err.response.data.message);
+        })
     }
   }
 </script>

@@ -42,7 +42,17 @@
             username: this.username,
             password: this.password
           }
-          console.log(loginInfo);
+          this.$axios.post('/api/login',loginInfo)
+            .then(res=> {
+              this.$emit('setUser',res.data.user)
+              this.$emit('setCookie','username',loginInfo.username)  // 存储cookie
+              this.$emit('setCookie','password',loginInfo.password)
+              this.$emit('clearErrMsg')
+              this.$router.go(-1)
+            })
+            .catch(err=>{
+              this.$emit('addErrMsg',err.response.data.message)
+            })
         }
       }
     }

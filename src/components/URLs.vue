@@ -18,7 +18,7 @@
           <span style="color:#606060">[{{url.type}}]</span>
           <a :href="url.content" target="_blank">{{url.title}}</a></div>
         <div class="post-info">
-          <router-link :to="{name: 'UserResources', params: {id: url.owner.id} }">{{url.owner.username}}</router-link>&nbsp;分享于&nbsp;<em>{{url.date}}</em>
+          <router-link :to="{name: 'UserResources', params: {id: url.owner.id} }">{{url.owner.username}}</router-link>&nbsp;分享于&nbsp;<em>{{url.create_date}}</em>
         </div>
       </li>
     </ul>
@@ -33,32 +33,18 @@
     components: {Pagination},
     data(){
       return {
-        urls: [
-          {
-            id: 1,
-            type: '教学',
-            title: '百度xxxx',
-            content: 'https://wwwibaidu.com',
-            owner: {
-              id: 111,
-              username: '朱星杰'
-            },
-            date: '2019-03-07 15:06:12'
-          },
-          {
-            id: 2,
-            type: '科普',
-            title: '百度sssss',
-            content: 'https://wwwibaidu.com',
-            owner: {
-              id: 520,
-              username: '冯成城'
-            },
-            date: '2019-03-06 12:01:55'
-          }
-        ],
+        urls: [],
         myLikeURLs: [1]
       }
+    },
+    mounted() {
+      this.$axios.get('/api/urls/limit?page=1')
+        .then(res=>{
+          this.urls = res.data.urls
+        })
+        .catch(err=>{
+          console.log(err.response.data.message);
+        })
     }
   }
 </script>

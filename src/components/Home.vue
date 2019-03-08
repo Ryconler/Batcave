@@ -12,7 +12,7 @@
           <a :href="url.content" target="_blank">{{url.title}}</a>
         </div>
         <div class="post-info">
-          <router-link :to="{name: 'UserResources', params:{id: url.owner.id} }">{{url.owner.username}}</router-link>&nbsp;分享于&nbsp;<em>{{url.date}}</em>
+          <router-link :to="{name: 'UserResources', params:{id: url.owner.id} }">{{url.owner.username}}</router-link>&nbsp;分享于&nbsp;<em>{{url.create_date}}</em>
         </div>
       </li>
     </ul>
@@ -26,7 +26,7 @@
           <router-link :to="{name: 'FileDetail', params:{id: file.id} }">{{file.title}}</router-link>
         </div>
         <div class="post-info">
-          <router-link :to="{name: 'UserResources', params:{id: file.owner.id} }">{{file.owner.username}}</router-link>&nbsp;分享于&nbsp;<em>{{file.date}}</em>
+          <router-link :to="{name: 'UserResources', params:{id: file.owner.id} }">{{file.owner.username}}</router-link>&nbsp;分享于&nbsp;<em>{{file.create_date}}</em>
         </div>
       </li>
     </ul>
@@ -39,53 +39,25 @@ export default {
   name: 'Home',
   data () {
     return {
-      urls: [
-        {
-          id: 1,
-          type: '教学',
-          title: '百度xxxx',
-          content: 'https://wwwibaidu.com',
-          owner: {
-            id: 111,
-            username: '朱星杰'
-          },
-          date: '2019-03-07 15:06:12'
-        },
-        {
-          id: 2,
-          type: '科普',
-          title: '百度sssss',
-          content: 'https://wwwibaidu.com',
-          owner: {
-            id: 520,
-            username: '冯成城'
-          },
-          date: '2019-03-06 12:01:55'
-        }
-      ],
-      files: [
-        {
-          id: 1,
-          type: '图片',
-          title: '高清图片xxx',
-          owner:{
-            id: 111,
-            username: '朱星杰'
-          },
-          date: '2019-03-07 15:06:12'
-        },
-        {
-          id: 2,
-          type: '压缩包',
-          title: '压缩包666',
-          owner: {
-            id: 520,
-            username: '冯成城'
-          },
-          date: '2019-03-06 12:01:55'
-        }
-      ],
+      urls: [],
+      files: [],
     }
+  },
+  mounted() {
+    this.$axios.get('/api/urls/home')
+      .then(res => {
+        this.urls = res.data.urls
+      })
+      .catch(err => {
+        console.log(err.response.message);
+      })
+    this.$axios.get('/api/files/home')
+      .then(res => {
+        this.files = res.data.files
+      })
+      .catch(err => {
+        console.log(err.response.message);
+      })
   }
 }
 </script>

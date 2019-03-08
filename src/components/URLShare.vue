@@ -6,21 +6,21 @@
     <form>
       <div class="form-group">
         <label for="title">标题</label>
-        <input type="text" class="form-control" id="title" placeholder="BatCave网站">
+        <input v-model.trim="title" type="text" class="form-control" id="title" placeholder="BatCave网站">
       </div>
       <div class="form-group">
         <label for="content">URL地址</label>
         <label for="content">
-          <select class="form-control">
+          <select v-model="http" class="form-control">
             <option value="http">http://</option>
             <option value="https">https://</option>
           </select>
         </label>
-        <input type="text" class="form-control" id="content" placeholder="batcave.jessezhu.cn">
+        <input v-model="content" type="text" class="form-control" id="content" placeholder="batcave.jessezhu.cn">
       </div>
       <div class="form-group">
         <label for="type">类别</label>
-        <select class="form-control" id="type">
+        <select v-model="type" class="form-control" id="type">
           <option value="asset">资源</option>
           <option value="video">视频</option>
           <option value="learn">教程</option>
@@ -29,7 +29,9 @@
         </select>
       </div>
       <button type="reset" class="btn btn-default" id="reset">重置</button>
-      <button type="submit" class="btn btn-primary" id="submit" @click.prevent="submit()">提交</button>
+      <button type="submit" class="btn btn-primary" id="submit" @click.prevent="submit()"
+              :disabled="!(title&&content&&http&&type)">提交
+      </button>
     </form>
   </div>
 </template>
@@ -37,11 +39,38 @@
 <script>
   export default {
     name: "Share",
-    methods:{
-      submit(){
-        alert('xx')
+    data() {
+      return {
+        title: '',
+        http: 'http',
+        content: '',
+        type: 'asset'
+      }
+    },
+    methods: {
+      submit() {
+        const cntReg = /^((ht|f)tps?):\/\/[\w\-]+(\.[\w\-]+)+([\w\-.,@?^=%&:\/~+#]*[\w\-@?^=%&\/~+#])?$/;  //网址正则
+        if (this.title && this.http && this.content && this.type) {
+          if (this.title.length > 20) this.$emit('addErrMsg', '标题长度不超过20')
+          else if (!cntReg.test(this.http + '://' + this.content)) this.$emit('addErrMsg', 'URL地址格式不正确')
+          else {
+            const url = {
+              title:this.title,
+              content: this.http + '://' + this.content,
+              type:this.type
+            }
+            this.$axios.post('/api/urls/url', url)
+              .then(res=>{
+                this.$router.push('/urls')
+              })
+              .catch(err=>{
+                console.log(err.response.data.message);
+              })
+          }
+        }
       }
     }
+
   }
 </script>
 

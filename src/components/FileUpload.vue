@@ -19,6 +19,10 @@
         </select>
       </div>
       <div class="form-group">
+        <label for="title">描述</label>
+        <textarea class="form-control" id="describe" placeholder="对文件的描述" style="resize:none"></textarea>
+      </div>
+      <div class="form-group">
         <label for="file">选择文件</label>
         <input type="file" id="file">
         <p class="help-block">文件大小不能超过1M</p>

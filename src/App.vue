@@ -66,7 +66,13 @@
         {{ msg }}
       </div>
       <router-view
+        :user="user"
+        @setUser="setUser"
         @addErrMsg="addErrMsg"
+        @clearErrMsg="clearErrMsg"
+        @setCookie="setCookie"
+        @getCookie="getCookie"
+        @delCookie="delCookie"
       ></router-view>
     </div>
   </div>
@@ -77,20 +83,56 @@
     name: 'App',
     data() {
       return {
-        user: {
-          id: 111,
-          username: '朱星杰'
-        },
+        user: null,
         errorMessages: []
       }
     },
     methods: {
+      setCookie(key, value) {
+        let date = new Date(); //获取当前时间
+        date.setTime(date.getTime() + 7 * 24 * 3600 * 1000); //格式化为cookie识别的时间
+        document.cookie = key + "=" + value + ";expires=" + date.toUTCString();  //设置cookie
+      },
+      getCookie(key) {
+        let cookies = document.cookie.split(';')
+        for(let cookie of cookies){
+          let c = cookie.trim()
+          if(c.indexOf(key+'=')!==-1){
+            return c.slice(key.length+1,c.length)
+          }
+        }
+      },
+      delCookie(key) {
+        let date = new Date(); //获取当前时间
+        date.setTime(date.getTime() - 10000); //将date设置为过去的时间
+        document.cookie = key + "=v; expires =" + date.toUTCString();//设置cookie
+      },
+      setUser(user){
+        this.user = user
+      },
       logout() {
         this.user = null
+        this.delCookie('username')
+        this.delCookie('password')
+        this.$axios.get('/api/logout')
+        this.$router.push('/')
       },
       addErrMsg(msg) {
         this.errorMessages.push(msg)
+      },
+      clearErrMsg() {
+        this.errorMessages = []
       }
+    },
+    mounted() {
+      this.$axios.get('/api/logstatus')
+        .then(res => {
+          this.user = res.data.user
+          if(res.data.message){
+            this.delCookie('username')
+            this.delCookie('password')
+          }
+        })
     }
   }
 </script>

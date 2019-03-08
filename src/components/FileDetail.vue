@@ -5,13 +5,14 @@
     </div>
     <h2 style="color: #2828FF;">{{file.title}}</h2>
     <h4>
-      <strong>上传作者：</strong><router-link :to="{name: 'UserResources', params: {id: file.owner.id} }">{{file.owner.username}}</router-link>
+      <strong>上传作者：</strong>
+      <router-link :to="{name: 'UserResources', params: {id: file.owner.id} }">{{file.owner.username}}</router-link>
     </h4>
     <h4>
       <strong>文件格式：</strong>{{file.type}}
     </h4>
     <h4>
-      <strong>上传时间：</strong>{{file.date}}
+      <strong>上传时间：</strong>{{file.create_date}}
     </h4>
     <h4>
       <strong>文件描述：</strong>{{file.describe}}
@@ -25,21 +26,36 @@
     name: "FileDetail",
     data() {
       return {
-        file: {
-          id: 1,
-          type: '图片',
-          title: '高清图片xxx',
-          owner: {
-            id: 111,
-            username: '朱星杰'
-          },
-          date: '2019-03-07 15:06:12',
-          describe: '这是一张图片'
+        file:  {
+          "id": 0,
+          "uid": 0,
+          "title": "",
+          "location": "",
+          "type": "",
+          "describe": '',
+          "private": "",
+          "create_date": "",
+          "owner": {
+            "id": 0,
+            "username": ""
+          }
         }
       }
     },
+    methods: {
+      getFile() {
+        const id =this.$route.params.id
+        this.$axios.get('/api/files/file/' + id)
+          .then(res => {
+            this.file = res.data.file
+          })
+          .catch(err => {
+            console.log(err.response.data.message);
+          })
+      }
+    },
     mounted() {
-      console.log(this.$route.params);
+      this.getFile()
     }
   }
 </script>

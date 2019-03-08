@@ -22,7 +22,7 @@
           <a href="javascript: void(0);" v-if="myLikeFiles.indexOf(file.id)!==-1"><img src="../assets/images/liked.png" style="width: 40px;"></a>
           <a href="javascript: void(0);" v-else><img src="../assets/images/like.png" style="width: 40px;"></a>
           <span style="color:#606060">[{{file.type}}]</span>
-          <router-link to="/file/detail/123">{{file.title}}</router-link>
+          <router-link :to="{name: 'FileDetail',  params: {id: file.id} }">{{file.title}}</router-link>
         </div>
         <div class="post-info">
           <a href="javascript: void(0);">{{file.owner.username}}</a>&nbsp;分享于&nbsp;<em>{{file.date}}</em>
@@ -40,55 +40,36 @@
     components: {Pagination},
     data(){
       return{
-        urls: [
-          {
-            id: 1,
-            type: '教学',
-            title: '百度xxxx',
-            content: 'https://wwwibaidu.com',
-            owner: {
-              id: 111,
-              username: '朱星杰'
-            },
-            date: '2019-03-07 15:06:12'
-          },
-          {
-            id: 2,
-            type: '科普',
-            title: '百度sssss',
-            content: 'https://wwwibaidu.com',
-            owner: {
-              id: 520,
-              username: '冯成城'
-            },
-            date: '2019-03-06 12:01:55'
-          }
-        ],
-        files: [
-          {
-            id: 1,
-            type: '图片',
-            title: '高清图片xxx',
-            owner:{
-              id: 111,
-              username: '朱星杰'
-            },
-            date: '2019-03-07 15:06:12'
-          },
-          {
-            id: 2,
-            type: '压缩包',
-            title: '压缩包666',
-            owner: {
-              id: 520,
-              username: '冯成城'
-            },
-            date: '2019-03-06 12:01:55'
-          }
-        ],
+        urls: [],
+        files: [],
         myLikeURLs: [1],
         myLikeFiles: [1]
       }
+    },
+    methods:{
+      getURLs() {
+        const id = this.$route.params.id
+        this.$axios.get('/api/urls/limit/' + id + '?page=1')
+          .then(res => {
+            this.urls = res.data.urls
+          })
+      },
+      getFiles() {
+        const id = this.$route.params.id
+        this.$axios.get('/api/files/limit/' + id + '?page=1')
+          .then(res => {
+            let files = []
+            for (let file of res.data.files) {
+              if(file.private === '0') files.push(file)
+            }
+            this.files = files
+          })
+      }
+    },
+
+    mounted() {
+      this.getURLs()
+      this.getFiles()
     }
   }
 </script>

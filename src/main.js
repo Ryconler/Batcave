@@ -6,6 +6,8 @@ import axios from 'axios'
 import App from './App'
 import router from './router'
 
+axios.defaults.withCredentials = true
+
 if (process.env.NODE_ENV === 'development') {
   axios.defaults.baseURL = 'http://localhost:5000'
 } else {
@@ -22,8 +24,8 @@ axios.interceptors.request.use(function (config) {
 axios.interceptors.response.use(function (response) {
   return response
 }, function (error) {
-  if (error.response.data.message === 'jwt expired') { // 身份过期错误
-    console.log('身份过期，请重新登录')
+  if (error.response && error.response.status === 401) { // 身份认证错误
+    console.log('请登录')
     router.push('/login')
   } else {
     return Promise.reject(error)
@@ -31,11 +33,11 @@ axios.interceptors.response.use(function (response) {
 })
 
 Vue.config.productionTip = false
-Vue.use(axios)
+Vue.prototype.$axios = axios
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
-  components: { App },
+  components: {App},
   template: '<App/>'
 })
