@@ -28,7 +28,7 @@
           <option value="other">其他</option>
         </select>
       </div>
-      <button type="reset" class="btn btn-default" id="reset">重置</button>
+      <button type="reset" class="btn btn-default" id="reset" @click.prevent="reset()">重置</button>
       <button type="submit" class="btn btn-primary" id="submit" @click.prevent="submit()"
               :disabled="!(title&&content&&http&&type)">提交
       </button>
@@ -48,6 +48,9 @@
       }
     },
     methods: {
+      reset(){
+        [this.title,this.http,this.content,this.type] = ['','http','','asset']
+      },
       submit() {
         const cntReg = /^((ht|f)tps?):\/\/[\w\-]+(\.[\w\-]+)+([\w\-.,@?^=%&:\/~+#]*[\w\-@?^=%&\/~+#])?$/;  //网址正则
         if (this.title && this.http && this.content && this.type) {
@@ -61,7 +64,7 @@
             }
             this.$axios.post('/api/urls/url', url)
               .then(res=>{
-                this.$router.push('/urls')
+                this.$router.push('/my/urls')
               })
               .catch(err=>{
                 console.log(err.response.data.message);

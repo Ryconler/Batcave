@@ -13,7 +13,11 @@
         </div>
       </li>
     </ul>
-    <pagination />
+    <pagination
+      limit="5"
+      :count="urlCount"
+      @setPage="setURLPage"
+    />
 
     <h1>他上传的文件</h1>
     <ul class="posts">
@@ -29,7 +33,11 @@
         </div>
       </li>
     </ul>
-    <pagination />
+    <pagination
+      limit="5"
+      :count="fileCount"
+      @setPage="setFilePage"
+    />
   </div>
 </template>
 
@@ -40,36 +48,74 @@
     components: {Pagination},
     data(){
       return{
+        id: 0,
         urls: [],
+        urlCount: 0,
+        urlPage:1,
         files: [],
+        fileCount: 0,
+        filePage:1,
         myLikeURLs: [1],
         myLikeFiles: [1]
       }
     },
     methods:{
+      setURLPage(page) {
+        this.urlPage = page
+      },
+      setFilePage(page) {
+        this.filePage = page
+      },
+      getURLCount() {
+        this.$axios.get('/api/urls/count/' + this.id)
+          .then(res => {
+            this.urlCount = res.data.count
+            console.log(this.urlCount);
+
+          })
+          .catch(err => {
+            console.log(err.response.data.message);
+          })
+      },
+      getFileCount() {
+        this.$axios.get('/api/files/public/count/' + this.id)
+          .then(res => {
+            this.fileCount = res.data.count
+            console.log(this.fileCount);
+
+          })
+          .catch(err => {
+            console.log(err.response.data.message);
+          })
+      },
       getURLs() {
-        const id = this.$route.params.id
-        this.$axios.get('/api/urls/limit/' + id + '?page=1')
+        this.$axios.get('/api/urls/limit5/' + this.id + '?page='+this.urlPage)
           .then(res => {
             this.urls = res.data.urls
           })
       },
       getFiles() {
-        const id = this.$route.params.id
-        this.$axios.get('/api/files/limit/' + id + '?page=1')
+        this.$axios.get('/api/files/public/limit/' + this.id + '?page='+this.filePage)
           .then(res => {
-            let files = []
-            for (let file of res.data.files) {
-              if(file.private === '0') files.push(file)
-            }
-            this.files = files
+            this.files = res.data.files
           })
       }
     },
 
     mounted() {
+      this.id = this.$route.params.id
       this.getURLs()
       this.getFiles()
+      this.getFileCount()
+      this.getURLCount()
+    },
+    watch:{
+      urlPage(){
+        this.getURLs()
+      },
+      filePage(){
+        this.getFiles()
+      }
     }
   }
 </script>

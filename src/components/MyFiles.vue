@@ -19,7 +19,11 @@
         </div>
       </li>
     </ul>
-    <pagination/>
+    <pagination
+      limit="5"
+      :count="pubFileCount"
+      @setPage="setPubPage"
+    />
 
     <h3>仅自己可见</h3>
     <ul class="posts">
@@ -36,7 +40,11 @@
         </div>
       </li>
     </ul>
-    <pagination/>
+    <pagination
+      limit="5"
+      :count="priFileCount"
+      @setPage="setPriPage"
+    />
   </div>
 </template>
 
@@ -50,31 +58,75 @@
     data() {
       return {
         publicFiles: [],
+        pubFileCount: 0,
+        pubPage: 1,
         privateFiles: [],
+        priFileCount: 0,
+        priPage: 1,
+
         myLikeFiles: [1]
       }
     },
     methods: {
-      getFiles() {
+      setPubPage(page) {
+        this.pubPage = page
+      },
+      setPriPage(page) {
+        this.priPage = page
+      },
+      getPublicFiles() {
         const id = this.user ? this.user.id : undefined
-        this.$axios.get('/api/files/limit/' + id + '?page=1')
+        this.$axios.get('/api/files/public/limit/' + id + '?page=' + this.pubPage)
           .then(res => {
-            let publicFiles = []
-            let privateFiles = []
-            for (let file of res.data.files) {
-              file.private === '0' ? publicFiles.push(file) : privateFiles.push(file)
-            }
-            this.publicFiles = publicFiles
-            this.privateFiles = privateFiles
+            this.publicFiles = res.data.files
+          })
+      },
+      getPrivateFiles() {
+        const id = this.user ? this.user.id : undefined
+        this.$axios.get('/api/files/private/limit/' + id + '?page=' + this.priPage)
+          .then(res => {
+            this.privateFiles = res.data.files
+          })
+      },
+      getPubCount() {
+        const id = this.user ? this.user.id : undefined
+        this.$axios.get('/api/files/public/count/' + id)
+          .then(res => {
+            this.pubFileCount = res.data.count
+          })
+          .catch(err => {
+            console.log(err.response.data.message);
+          })
+      },
+      getPriCount() {
+        const id = this.user ? this.user.id : undefined
+        this.$axios.get('/api/files/private/count/' + id)
+          .then(res => {
+            this.priFileCount = res.data.count
+          })
+          .catch(err => {
+            console.log(err.response.data.message);
           })
       }
     },
     mounted() {
-      this.getFiles()
+      this.getPrivateFiles()
+      this.getPrivateFiles()
+      this.getPubCount()
+      this.getPriCount()
     },
     watch: {
       user() {
-        this.getFiles()
+        this.getPublicFiles()
+        this.getPrivateFiles()
+        this.getPubCount()
+        this.getPriCount()
+      },
+      pubPage(){
+        this.getPublicFiles()
+      },
+      priPage(){
+        this.getPrivateFiles()
       }
     }
   }

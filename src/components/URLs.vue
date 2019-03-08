@@ -22,7 +22,11 @@
         </div>
       </li>
     </ul>
-    <pagination></pagination>
+    <pagination
+    limit="10"
+    :count="urlCount"
+    @setPage="setPage"
+    />
   </div>
 </template>
 
@@ -34,17 +38,42 @@
     data(){
       return {
         urls: [],
+        urlCount: 0,
+        page: 1,
         myLikeURLs: [1]
       }
     },
+    methods:{
+      setPage(page){
+        this.page = page
+      },
+      getURLs(){
+        this.$axios.get('/api/urls/limit?page='+this.page)
+          .then(res=>{
+            this.urls = res.data.urls
+          })
+          .catch(err=>{
+            console.log(err.response.data.message);
+          })
+      },
+      getCount(){
+        this.$axios.get('/api/urls/count')
+          .then(res=>{
+            this.urlCount = res.data.count
+          })
+          .catch(err=>{
+            console.log(err.response.data.message);
+          })
+      }
+    },
     mounted() {
-      this.$axios.get('/api/urls/limit?page=1')
-        .then(res=>{
-          this.urls = res.data.urls
-        })
-        .catch(err=>{
-          console.log(err.response.data.message);
-        })
+      this.getURLs()
+      this.getCount()
+    },
+    watch:{
+      page(){
+        this.getURLs()
+      }
     }
   }
 </script>

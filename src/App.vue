@@ -91,7 +91,7 @@
       setCookie(key, value) {
         let date = new Date(); //获取当前时间
         date.setTime(date.getTime() + 7 * 24 * 3600 * 1000); //格式化为cookie识别的时间
-        document.cookie = key + "=" + value + ";expires=" + date.toUTCString();  //设置cookie
+        document.cookie = key + "=" + encodeURI(value) + ";expires=" + date.toUTCString();  //设置cookie
       },
       getCookie(key) {
         let cookies = document.cookie.split(';')

@@ -1,6 +1,9 @@
 <template>
   <div>
-    <h1>我的链接</h1>
+    <div class="page-header">
+      <h1>我的链接</h1>
+      <router-link to="/url/share">我要分享</router-link>
+    </div>
     <ul class="posts">
       <li class="post" v-for="url of urls">
         <div class="post-title">
@@ -14,8 +17,11 @@
         </div>
       </li>
     </ul>
-
-    <pagination/>
+    <pagination
+      limit="10"
+      :count="urlCount"
+      @setPage="setPage"
+    />
   </div>
 </template>
 
@@ -29,23 +35,43 @@
     data() {
       return {
         urls: [],
+        urlCount: 0,
+        page: 1,
         myLikeURLs: [1]
       }
     },
     methods: {
+      setPage(page) {
+        this.page = page
+      },
       getURLs() {
         const id = this.user ? this.user.id : undefined
-        this.$axios.get('/api/urls/limit/' + id + '?page=1')
+        this.$axios.get('/api/urls/limit/' + id + '?page='+this.page)
           .then(res => {
             this.urls = res.data.urls
+          })
+      },
+      getCount() {
+        const id = this.user ? this.user.id : undefined
+        this.$axios.get('/api/urls/count/' + id)
+          .then(res => {
+            this.urlCount = res.data.count
+          })
+          .catch(err => {
+            console.log(err.response.data.message);
           })
       }
     },
     mounted() {
       this.getURLs()
+      this.getCount()
     },
     watch: {
       user() {
+        this.getURLs()
+        this.getCount()
+      },
+      page() {
         this.getURLs()
       }
     }

@@ -34,6 +34,11 @@ axios.interceptors.response.use(function (response) {
 
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
+// 新建一个axios实例专门用来传multipart/form-data类型的数据
+Vue.prototype.$axiosInstance = axios.create({
+  baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'http://batcave.server.jessezhu.cn',
+  headers: {'Content-Type': 'multipart/form-data'}
+})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

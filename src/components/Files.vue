@@ -23,7 +23,11 @@
         </div>
       </li>
     </ul>
-    <pagination></pagination>
+    <pagination
+      limit="10"
+      :count="fileCount"
+      @setPage="setPage"
+    />
   </div>
 </template>
 
@@ -36,17 +40,42 @@
     data() {
       return {
         files: [],
+        fileCount: 0,
+        page: 1,
         myLikeFiles: [1]
       }
     },
+    methods:{
+      setPage(page){
+        this.page = page
+      },
+      getFiles(){
+        this.$axios.get('/api/files/limit?page='+this.page)
+          .then(res=>{
+            this.files = res.data.files
+          })
+          .catch(err=>{
+            console.log(err.response.data.message);
+          })
+      },
+      getCount(){
+        this.$axios.get('/api/files/count')
+          .then(res=>{
+            this.fileCount = res.data.count
+          })
+          .catch(err=>{
+            console.log(err.response.data.message);
+          })
+      }
+    },
     mounted() {
-      this.$axios.get('/api/files/limit?page=1')
-        .then(res=>{
-          this.files = res.data.files
-        })
-        .catch(err=>{
-          console.log(err.response.data.message);
-        })
+      this.getFiles()
+      this.getCount()
+    },
+    watch:{
+      page(){
+        this.getFiles()
+      }
     }
   }
 </script>
