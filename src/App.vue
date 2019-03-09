@@ -161,6 +161,8 @@
         this.user = null
         this.delCookie('username')
         this.delCookie('password')
+        this.myLikeURLs =  []
+        this.myLikeFiles = []
         this.$axios.get('/api/logout')
           .then(res => {
             this.$router.push('/login')
