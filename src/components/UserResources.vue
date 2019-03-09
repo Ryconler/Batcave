@@ -4,12 +4,12 @@
     <ul class="posts">
       <li class="post" v-for="url of urls">
         <div class="post-title">
-          <a href="javascript: void(0);" v-if="myLikeURLs.indexOf(url.id)!==-1"><img src="../assets/images/liked.png" style="width: 40px;"></a>
-          <a href="javascript: void(0);" v-else><img src="../assets/images/like.png" style="width: 40px;"></a>
+          <a href="javascript: void(0);" v-if="myLikeURLs.indexOf(url.id)!==-1" @click="unlikeURL(url.id)"><img src="../assets/images/liked.png" style="width: 40px;"></a>
+          <a href="javascript: void(0);" v-else @click="likeURL(url.id)"><img src="../assets/images/like.png" style="width: 40px;"></a>
           <span style="color:#606060">[{{url.type}}]</span>
           <a :href="url.content" target="_blank">{{url.title}}</a></div>
         <div class="post-info">
-          <a href="javascript: void(0);">{{url.owner.username}}</a>&nbsp;分享于&nbsp;<em>{{url.date}}</em>
+          &nbsp;分享于&nbsp;<em>{{url.create_date}}</em>
         </div>
       </li>
     </ul>
@@ -23,13 +23,13 @@
     <ul class="posts">
       <li class="post" v-for="file of files">
         <div class="post-title">
-          <a href="javascript: void(0);" v-if="myLikeFiles.indexOf(file.id)!==-1"><img src="../assets/images/liked.png" style="width: 40px;"></a>
-          <a href="javascript: void(0);" v-else><img src="../assets/images/like.png" style="width: 40px;"></a>
+          <a href="javascript: void(0);" v-if="myLikeFiles.indexOf(file.id)!==-1" @click="unlikeFile(file.id)"><img src="../assets/images/liked.png" style="width: 40px;"></a>
+          <a href="javascript: void(0);" v-else @click="likeFile(file.id)"><img src="../assets/images/like.png" style="width: 40px;"></a>
           <span style="color:#606060">[{{file.type}}]</span>
           <router-link :to="{name: 'FileDetail',  params: {id: file.id} }">{{file.title}}</router-link>
         </div>
         <div class="post-info">
-          <a href="javascript: void(0);">{{file.owner.username}}</a>&nbsp;分享于&nbsp;<em>{{file.date}}</em>
+          &nbsp;分享于&nbsp;<em>{{file.create_date}}</em>
         </div>
       </li>
     </ul>
@@ -46,17 +46,28 @@
   export default {
     name: "UserResources",
     components: {Pagination},
+    props:['myLikeURLs','myLikeFiles'],
     data(){
       return{
         id: 0,
-        urls: [],
+        urls: [
+          {id:0,owner: {id:0}},
+          {id:1,owner: {id:1}},
+          {id:2,owner: {id:2}},
+          {id:3,owner: {id:3}},
+          {id:4,owner: {id:4}},
+        ],
         urlCount: 0,
         urlPage:1,
-        files: [],
+        files: [
+          {id:0,owner: {id:0}},
+          {id:1,owner: {id:1}},
+          {id:2,owner: {id:2}},
+          {id:3,owner: {id:3}},
+          {id:4,owner: {id:4}},
+        ],
         fileCount: 0,
-        filePage:1,
-        myLikeURLs: [1],
-        myLikeFiles: [1]
+        filePage:1
       }
     },
     methods:{
@@ -70,8 +81,6 @@
         this.$axios.get('/api/urls/count/' + this.id)
           .then(res => {
             this.urlCount = res.data.count
-            console.log(this.urlCount);
-
           })
           .catch(err => {
             console.log(err.response.data.message);
@@ -81,8 +90,6 @@
         this.$axios.get('/api/files/public/count/' + this.id)
           .then(res => {
             this.fileCount = res.data.count
-            console.log(this.fileCount);
-
           })
           .catch(err => {
             console.log(err.response.data.message);
@@ -99,10 +106,23 @@
           .then(res => {
             this.files = res.data.files
           })
+      },
+      unlikeURL(rid){
+        this.$emit('unlikeURL',rid)
+      },
+      likeURL(rid){
+        this.$emit('likeURL',rid)
+      },
+      likeFile(fid) {
+        this.$emit('likeFile',fid)
+      },
+      unlikeFile(fid) {
+        this.$emit('unlikeFile',fid)
       }
     },
 
     mounted() {
+      this.$emit('selectNone')
       this.id = this.$route.params.id
       this.getURLs()
       this.getFiles()

@@ -8,14 +8,14 @@
     <ul class="posts">
       <li class="post" v-for="file of publicFiles">
         <div class="post-title">
-          <a href="javascript: void(0);" v-if="myLikeFiles.indexOf(file.id)!==-1"><img src="../assets/images/liked.png"
+          <a href="javascript: void(0);" v-if="myLikeFiles.indexOf(file.id)!==-1" @click="unlikeFile(file.id)"><img src="../assets/images/liked.png"
                                                                                        style="width: 40px;"></a>
-          <a href="javascript: void(0);" v-else><img src="../assets/images/like.png" style="width: 40px;"></a>
+          <a href="javascript: void(0);" v-else @click="likeFile(file.id)"><img src="../assets/images/like.png" style="width: 40px;"></a>
           <span style="color:#606060">[{{file.type}}]</span>
           <router-link :to="{name: 'FileDetail', params: {id: file.id} }">{{file.title}}</router-link>
         </div>
         <div class="post-info">
-          <a href="javascript: void(0);">{{file.owner.username}}</a>&nbsp;分享于&nbsp;<em>{{file.create_date}}</em>
+          &nbsp;上传于&nbsp;<em>{{file.create_date}}</em>
         </div>
       </li>
     </ul>
@@ -29,14 +29,14 @@
     <ul class="posts">
       <li class="post" v-for="file of privateFiles">
         <div class="post-title">
-          <a href="javascript: void(0);" v-if="myLikeFiles.indexOf(file.id)!==-1"><img src="../assets/images/liked.png"
+          <a href="javascript: void(0);" v-if="myLikeFiles.indexOf(file.id)!==-1" @click="unlikeFile(file.id)"><img src="../assets/images/liked.png"
                                                                                        style="width: 40px;"></a>
-          <a href="javascript: void(0);" v-else><img src="../assets/images/like.png" style="width: 40px;"></a>
+          <a href="javascript: void(0);" v-else  @click="likeFile(file.id)"><img src="../assets/images/like.png" style="width: 40px;"></a>
           <span style="color:#606060">[{{file.type}}]</span>
           <router-link :to="{name: 'FileDetail', params: {id: file.id} }">{{file.title}}</router-link>
         </div>
         <div class="post-info">
-          <a href="javascript: void(0);">{{file.owner.username}}</a>&nbsp;分享于&nbsp;<em>{{file.create_date}}</em>
+          &nbsp;上传于&nbsp;<em>{{file.create_date}}</em>
         </div>
       </li>
     </ul>
@@ -54,7 +54,7 @@
   export default {
     name: "MyFiles",
     components: {Pagination},
-    props: ['user'],  // 父组件的参数
+    props: ['user','myLikeFiles'],  // 父组件的参数
     data() {
       return {
         publicFiles: [],
@@ -63,8 +63,6 @@
         privateFiles: [],
         priFileCount: 0,
         priPage: 1,
-
-        myLikeFiles: [1]
       }
     },
     methods: {
@@ -107,13 +105,31 @@
           .catch(err => {
             console.log(err.response.data.message);
           })
+      },
+      likeFile(fid) {
+        this.$emit('likeFile',fid)
+      },
+      unlikeFile(fid) {
+        this.$emit('unlikeFile',fid)
       }
     },
     mounted() {
-      this.getPrivateFiles()
+      this.$emit('selectNone')
+      this.$axios.get('/api/logstatus')
+        .then(res => {
+          if(!res.data.user){
+            this.$router.replace('/login')
+          }
+          if (res.data.message) {
+            this.$emit('delCookie','username')
+            this.$emit('delCookie','password')
+          }
+        })
+      this.getPublicFiles()
       this.getPrivateFiles()
       this.getPubCount()
       this.getPriCount()
+
     },
     watch: {
       user() {

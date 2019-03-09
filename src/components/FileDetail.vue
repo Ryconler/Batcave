@@ -54,6 +54,7 @@
     },
     mounted() {
       this.getFile()
+      this.$emit('selectNone')
     }
   }
 </script>

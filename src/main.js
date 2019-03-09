@@ -39,6 +39,7 @@ Vue.prototype.$axiosInstance = axios.create({
   baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : 'http://batcave.server.jessezhu.cn',
   headers: {'Content-Type': 'multipart/form-data'}
 })
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

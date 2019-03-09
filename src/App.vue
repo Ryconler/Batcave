@@ -14,13 +14,13 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li>
+            <li :class="{select: homeSelect}">
               <router-link to="/">首页</router-link>
             </li>
-            <li>
+            <li :class="{select: urlSelect}">
               <router-link to="/urls">链接资源</router-link>
             </li>
-            <li>
+            <li :class="{select: fileSelect}">
               <router-link to="/files">文件资源</router-link>
             </li>
           </ul>
@@ -67,12 +67,23 @@
       </div>
       <router-view
         :user="user"
+        :myLikeURLs="myLikeURLs"
+        :myLikeFiles="myLikeFiles"
         @setUser="setUser"
         @addErrMsg="addErrMsg"
         @clearErrMsg="clearErrMsg"
         @setCookie="setCookie"
         @getCookie="getCookie"
         @delCookie="delCookie"
+        @likeURL="likeURL"
+        @unlikeURL="unlikeURL"
+        @likeFile="likeFile"
+        @unlikeFile="unlikeFile"
+        @logout="logout"
+        @selectHome="selectHome"
+        @selectURL="selectURL"
+        @selectFile="selectFile"
+        @selectNone="selectNone"
       ></router-view>
     </div>
   </div>
@@ -84,10 +95,45 @@
     data() {
       return {
         user: null,
-        errorMessages: []
+        errorMessages: [],
+        myLikeURLs: [],
+        myLikeFiles: [],
+        homeSelect: true,
+        urlSelect: false,
+        fileSelect: false,
       }
     },
     methods: {
+      selectNone(){
+        this.homeSelect = false
+        this.urlSelect = false
+        this.fileSelect = false
+      },
+      selectHome(){
+        this.homeSelect = true
+        this.urlSelect = false
+        this.fileSelect = false
+      },
+      selectURL(){
+        this.urlSelect = true
+        this.homeSelect = false
+        this.fileSelect = false
+      },
+      selectFile(){
+        this.fileSelect = true
+        this.homeSelect = false
+        this.urlSelect = false
+      },
+      getLogStatus() {
+        this.$axios.get('/api/logstatus')
+          .then(res => {
+            this.user = res.data.user
+            if (res.data.message) {
+              this.delCookie('username')
+              this.delCookie('password')
+            }
+          })
+      },
       setCookie(key, value) {
         let date = new Date(); //获取当前时间
         date.setTime(date.getTime() + 7 * 24 * 3600 * 1000); //格式化为cookie识别的时间
@@ -95,10 +141,10 @@
       },
       getCookie(key) {
         let cookies = document.cookie.split(';')
-        for(let cookie of cookies){
+        for (let cookie of cookies) {
           let c = cookie.trim()
-          if(c.indexOf(key+'=')!==-1){
-            return c.slice(key.length+1,c.length)
+          if (c.indexOf(key + '=') !== -1) {
+            return c.slice(key.length + 1, c.length)
           }
         }
       },
@@ -107,7 +153,7 @@
         date.setTime(date.getTime() - 10000); //将date设置为过去的时间
         document.cookie = key + "=v; expires =" + date.toUTCString();//设置cookie
       },
-      setUser(user){
+      setUser(user) {
         this.user = user
       },
       logout() {
@@ -115,24 +161,87 @@
         this.delCookie('username')
         this.delCookie('password')
         this.$axios.get('/api/logout')
-        this.$router.push('/')
+        this.$router.push('/login')
       },
       addErrMsg(msg) {
         this.errorMessages.push(msg)
       },
       clearErrMsg() {
         this.errorMessages = []
+      },
+      getMyLikeURLs() {
+        if(this.user){
+          this.$axios.get('/api/likes/urls/id')
+            .then(res => {
+              this.myLikeURLs = res.data.likes
+            })
+            .catch(err => {
+              console.log(err.response.data.message);
+            })
+        }
+      },
+      getMyLikeFiles() {
+        if(this.user){
+          this.$axios.get('/api/likes/files/id')
+            .then(res => {
+              this.myLikeFiles = res.data.likes
+            })
+            .catch(err => {
+              console.log(err.response.data.message);
+            })
+        }
+      },
+      likeURL(rid) {
+        this.$axios.post('/api/likes/like', {rid: rid})
+          .then(res => {
+            this.myLikeURLs.push(rid)
+          })
+          .catch(err => {
+            console.log(err.response.data.message);
+          })
+      },
+      unlikeURL(rid) {
+        this.$axios.delete('/api/likes/unlike/url/' + rid)
+          .then(res => {
+            let myLikeURLs = this.myLikeURLs
+            do {
+              myLikeURLs.splice(myLikeURLs.indexOf(rid),1)
+            }
+            while (myLikeURLs.indexOf(rid)!==-1)
+            this.myLikeURLs = myLikeURLs
+          })
+          .catch(err => {
+            console.log(err.response.data.message);
+          })
+      },
+      likeFile(fid) {
+        this.$axios.post('/api/likes/like', {fid: fid})
+          .then(res => {
+            this.myLikeFiles.push(fid)
+          })
+          .catch(err => {
+            console.log(err.response.data.message);
+          })
+      },
+      unlikeFile(fid) {
+        this.$axios.delete('/api/likes/unlike/file/' + fid)
+          .then(res => {
+            let myLikeFiles = this.myLikeFiles
+            do {
+              myLikeFiles.splice(myLikeFiles.indexOf(fid),1)
+            }
+            while (myLikeFiles.indexOf(fid)!==-1)
+            this.myLikeFiles = myLikeFiles
+          })
+          .catch(err => {
+            console.log(err.response.data.message);
+          })
       }
     },
     mounted() {
-      this.$axios.get('/api/logstatus')
-        .then(res => {
-          this.user = res.data.user
-          if(res.data.message){
-            this.delCookie('username')
-            this.delCookie('password')
-          }
-        })
+      this.getLogStatus()
+      this.getMyLikeURLs()
+      this.getMyLikeFiles()
     }
   }
 </script>
@@ -146,6 +255,18 @@
     background-attachment: fixed
   }
 
+  li.select{
+    background: aliceblue !important;
+  }
+  li.select a{
+    color: #101010 !important;
+  }
+  li.select a:hover{
+    color: #101010 !important;
+  }
+  li.select a:visited{
+    color: #101010 !important;
+  }
   .profile-thumbnail {
     position: absolute;
   }

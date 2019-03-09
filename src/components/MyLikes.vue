@@ -4,91 +4,146 @@
     <ul class="posts">
       <li class="post" v-for="url of urls">
         <div class="post-title">
-          <a href="javascript: void(0);" v-if="myLikeURLs.indexOf(url.id)!==-1"><img src="../assets/images/liked.png" style="width: 40px;"></a>
-          <a href="javascript: void(0);" v-else><img src="../assets/images/like.png" style="width: 40px;"></a>
+          <a href="javascript: void(0);" v-if="myLikeURLs.indexOf(url.rid)!==-1" @click="unlikeURL(url.rid)"><img
+            src="../assets/images/liked.png" style="width: 40px;"></a>
+          <a href="javascript: void(0);" v-else @click="likeURL(url.rid)"><img src="../assets/images/like.png"
+                                                                              style="width: 40px;"></a>
           <span style="color:#606060">[{{url.type}}]</span>
           <a :href="url.content" target="_blank">{{url.title}}</a>
         </div>
         <div class="post-info">
-          <router-link :to="{name: 'UserResources', params: {id: url.owner.id} }">{{url.owner.username}}</router-link>&nbsp;分享于&nbsp;<em>{{url.date}}</em>
+          &nbsp;喜欢与&nbsp;<em>{{url.like_date}}</em>
         </div>
       </li>
     </ul>
-    <pagination />
+    <pagination
+      limit="5"
+      :count="urlCount"
+      @setPage="setURLPage"
+    />
 
     <h1>我喜欢的文件</h1>
     <ul class="posts">
       <li class="post" v-for="file of files">
         <div class="post-title">
-          <a href="javascript: void(0);" v-if="myLikeFiles.indexOf(file.id)!==-1"><img src="../assets/images/liked.png" style="width: 40px;"></a>
-          <a href="javascript: void(0);" v-else><img src="../assets/images/like.png" style="width: 40px;"></a>
+          <a href="javascript: void(0);" v-if="myLikeFiles.indexOf(file.fid)!==-1" @click="unlikeFile(file.fid)"><img
+            src="../assets/images/liked.png" style="width: 40px;"></a>
+          <a href="javascript: void(0);" v-else @click="likeFile(file.fid)"><img src="../assets/images/like.png"
+                                                                                style="width: 40px;"></a>
           <span style="color:#606060">[{{file.type}}]</span>
-          <router-link :to="{name: 'FileDetail', params: {id: file.id} }">{{file.title}}</router-link>
+          <router-link :to="{name: 'FileDetail', params: {id: file.fid} }">{{file.title}}</router-link>
         </div>
         <div class="post-info">
-          <router-link :to="{name: 'UserResources', params: {id: file.owner.id} }">{{file.owner.username}}</router-link>&nbsp;分享于&nbsp;<em>{{file.date}}</em>
+          &nbsp;喜欢于&nbsp;<em>{{file.like_date}}</em>
         </div>
       </li>
     </ul>
-    <pagination />
+    <pagination
+      limit="5"
+      :count="fileCount"
+      @setPage="setFilePage"
+    />
   </div>
 </template>
 
 <script>
   import Pagination from "./reusable/Pagination";
+
   export default {
     name: "MyLikes",
     components: {Pagination},
-    data(){
+    props: ['myLikeURLs', 'myLikeFiles'],
+    data() {
       return {
-        urls: [
-          {
-            id: 1,
-            type: '教学',
-            title: '百度xxxx',
-            content: 'https://wwwibaidu.com',
-            owner: {
-              id: 111,
-              username: '朱星杰'
-            },
-            date: '2019-03-07 15:06:12'
-          },
-          {
-            id: 2,
-            type: '科普',
-            title: '百度sssss',
-            content: 'https://wwwibaidu.com',
-            owner: {
-              id: 520,
-              username: '冯成城'
-            },
-            date: '2019-03-06 12:01:55'
+        urls: [],
+        urlPage: 1,
+        urlCount: 0,
+        files: [],
+        filePage: 1,
+        fileCount: 0,
+      }
+    },
+    methods: {
+      setURLPage(page) {
+        this.urlPage = page
+      },
+      getURLCount() {
+        this.$axios.get('/api/likes/urls/id')
+          .then(res => {
+            this.urlCount = res.data.likes.length
+          })
+          .catch(err => {
+            console.log(err.response.data.message);
+          })
+      },
+      getURLs() {
+        this.$axios.get('/api/likes/urls/limit?page=' + this.urlPage)
+          .then(res=>{
+            this.urls = res.data.likes
+          })
+          .catch(err=>{
+            console.log(err.response.data.message);
+          })
+      },
+      setFilePage(page) {
+        this.filePage = page
+      },
+      getFileCount() {
+        this.$axios.get('/api/likes/files/id')
+          .then(res => {
+            this.fileCount = res.data.likes.length
+          })
+          .catch(err=>{
+            console.log(err.response.data.message);
+          })
+      },
+      getFiles() {
+        this.$axios.get('/api/likes/files/limit?page=' + this.filePage)
+          .then(res=>{
+            this.files = res.data.likes
+          })
+          .catch(err=>{
+            console.log(err.response.data.message);
+          })
+      },
+      unlikeURL(rid) {
+        this.$emit('unlikeURL', rid)
+      },
+      likeURL(rid) {
+        this.$emit('likeURL', rid)
+      },
+      likeFile(fid) {
+        this.$emit('likeFile', fid)
+      },
+      unlikeFile(fid) {
+        this.$emit('unlikeFile', fid)
+      }
+    },
+    mounted() {
+      this.$emit('selectNone')
+      this.$axios.get('/api/logstatus')
+        .then(res => {
+          if(!res.data.user){
+            this.$router.replace('/login')
           }
-        ],
-        files: [
-          {
-            id: 1,
-            type: '图片',
-            title: '高清图片xxx',
-            owner:{
-              id: 111,
-              username: '朱星杰'
-            },
-            date: '2019-03-07 15:06:12'
-          },
-          {
-            id: 2,
-            type: '压缩包',
-            title: '压缩包666',
-            owner: {
-              id: 520,
-              username: '冯成城'
-            },
-            date: '2019-03-06 12:01:55'
+          if (res.data.message) {
+            this.$emit('delCookie','username')
+            this.$emit('delCookie','password')
           }
-        ],
-        myLikeURLs: [1,2],
-        myLikeFiles: [1,2]
+        })
+      this.getURLs()
+      this.getFiles()
+      this.getURLCount()
+      this.getFileCount()
+    },
+    watch:{
+      urlPage(){
+        this.getURLs()
+        this.getURLCount()
+      },
+      filePage(){
+        this.getFiles()
+        this.getFileCount()
       }
     }
   }

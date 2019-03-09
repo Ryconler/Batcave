@@ -33,8 +33,9 @@
         }
       },
       pageMinus(){
-        if(this.curPage!==1)
-        this.$emit('setPage',--this.curPage)
+        if(this.curPage!==1){
+          this.$emit('setPage',--this.curPage)
+        }
       },
       pageTo(page){
         this.curPage = page
