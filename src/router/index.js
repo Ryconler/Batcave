@@ -99,8 +99,8 @@ const router = new Router({
   mode: 'history'
 })
 router.beforeEach((to, from, next) => {
-  const user = store.state.user
-  if (user) { // 之前有存储过从后端传过来的token
+  const isLogin = localStorage.getItem('login')
+  if (isLogin==='yes') { // 之前有存储过从后端传过来的token
     if (['login', 'register'].indexOf(to.name) >= 0) { // 已经登录了耍心机还想去登录
       next('/') // 不允许
     } else {

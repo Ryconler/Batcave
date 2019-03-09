@@ -161,6 +161,7 @@ export default {
   checkLog({commit}) {
     axios.get('/api/checkLog')
       .then(res => {
+        localStorage.setItem('login','yes')
         commit('setUser', res.data.user)
         axios.get('/api/likes/urls/id')
           .then(res => {
@@ -172,6 +173,7 @@ export default {
           })
       })
       .catch(err => {
+        localStorage.setItem('login','no')
         delCookie('username')
         delCookie('password')
       })
@@ -179,6 +181,7 @@ export default {
   logout({commit}) {
     delCookie('username')
     delCookie('password')
+    localStorage.setItem('login','no')
     commit('setUser', null)
     commit('clearMyLikeURLIds')
     commit('clearMyLikFileIds')
@@ -190,6 +193,7 @@ export default {
   login({commit}, loginInfo) {
     axios.post('/api/login', loginInfo)
       .then(res => {
+        localStorage.setItem('login','yes')
         commit('setUser', res.data.user)
         commit('clearErrMsg')
         setCookie('username', loginInfo.username)
@@ -215,6 +219,7 @@ export default {
         commit('clearErrMsg')
         setCookie('username', registerInfo.username)
         setCookie('password', registerInfo.password)
+        localStorage.setItem('login','yes')
         router.push('/')
       })
       .catch(err => {
@@ -227,6 +232,7 @@ export default {
         alert('更改成功')
         delCookie('username')
         delCookie('password')
+        localStorage.setItem('login','no')
         commit('setUser', null)
         commit('clearMyLikeURLIds')
         commit('clearMyLikFileIds')
