@@ -15,6 +15,8 @@ import MyURLs from '../components/MyURLs' // 我的链接
 import MyFiles from '../components/MyFiles' // 我的文件
 import UserResources from '../components/UserResources' // 他人的资源
 
+import store from '../store/index'
+
 Vue.use(Router)
 
 const router = new Router({
@@ -25,15 +27,20 @@ const router = new Router({
     },
     {
       path: '/login',
+      name:'login',
       component: Login
     },
     {
       path: '/register',
+      name:'register',
       component: Register
     },
     {
       path: '/change-password',
-      component: ChangePassword
+      component: ChangePassword,
+      meta: {
+        requireAuth: true
+      }
     },
     {
       path: '/urls',
@@ -41,7 +48,10 @@ const router = new Router({
     },
     {
       path: '/url/share',
-      component: URLShare
+      component: URLShare,
+      meta: {
+        requireAuth: true
+      }
     },
     {
       path: '/files',
@@ -54,19 +64,31 @@ const router = new Router({
     },
     {
       path: '/file/upload',
-      component: FileUpload
+      component: FileUpload,
+      meta: {
+        requireAuth: true
+      }
     },
     {
       path: '/my/likes',
-      component: MyLikes
+      component: MyLikes,
+      meta: {
+        requireAuth: true
+      }
     },
     {
       path: '/my/urls',
-      component: MyURLs
+      component: MyURLs,
+      meta: {
+        requireAuth: true
+      }
     },
     {
       path: '/my/files',
-      component: MyFiles
+      component: MyFiles,
+      meta: {
+        requireAuth: true
+      }
     },
     {
       path: '/user/:id/resources',
@@ -76,5 +98,20 @@ const router = new Router({
   ],
   mode: 'history'
 })
-
+router.beforeEach((to, from, next) => {
+  const user = store.state.user
+  if (user) { // 之前有存储过从后端传过来的token
+    if (['login', 'register'].indexOf(to.name) >= 0) { // 已经登录了耍心机还想去登录
+      next('/') // 不允许
+    } else {
+      next() // 想去哪就去哪
+    }
+  } else { // 没有token，到login页面登录取token
+    if (to.meta.requireAuth) { // 并且要访问的页面需要token验证
+      next('/login') // 去login登录获取token
+    } else {
+      next() // 并不需要token，直接跳转
+    }
+  }
+})
 export default router
