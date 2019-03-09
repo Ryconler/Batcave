@@ -104,22 +104,22 @@
       }
     },
     methods: {
-      selectNone(){
+      selectNone() {
         this.homeSelect = false
         this.urlSelect = false
         this.fileSelect = false
       },
-      selectHome(){
+      selectHome() {
         this.homeSelect = true
         this.urlSelect = false
         this.fileSelect = false
       },
-      selectURL(){
+      selectURL() {
         this.urlSelect = true
         this.homeSelect = false
         this.fileSelect = false
       },
-      selectFile(){
+      selectFile() {
         this.fileSelect = true
         this.homeSelect = false
         this.urlSelect = false
@@ -161,7 +161,9 @@
         this.delCookie('username')
         this.delCookie('password')
         this.$axios.get('/api/logout')
-        this.$router.push('/login')
+          .then(res => {
+            this.$router.push('/login')
+          })
       },
       addErrMsg(msg) {
         this.errorMessages.push(msg)
@@ -170,7 +172,7 @@
         this.errorMessages = []
       },
       getMyLikeURLs() {
-        if(this.user){
+        if (this.user) {
           this.$axios.get('/api/likes/urls/id')
             .then(res => {
               this.myLikeURLs = res.data.likes
@@ -181,7 +183,7 @@
         }
       },
       getMyLikeFiles() {
-        if(this.user){
+        if (this.user) {
           this.$axios.get('/api/likes/files/id')
             .then(res => {
               this.myLikeFiles = res.data.likes
@@ -205,9 +207,9 @@
           .then(res => {
             let myLikeURLs = this.myLikeURLs
             do {
-              myLikeURLs.splice(myLikeURLs.indexOf(rid),1)
+              myLikeURLs.splice(myLikeURLs.indexOf(rid), 1)
             }
-            while (myLikeURLs.indexOf(rid)!==-1)
+            while (myLikeURLs.indexOf(rid) !== -1)
             this.myLikeURLs = myLikeURLs
           })
           .catch(err => {
@@ -228,9 +230,9 @@
           .then(res => {
             let myLikeFiles = this.myLikeFiles
             do {
-              myLikeFiles.splice(myLikeFiles.indexOf(fid),1)
+              myLikeFiles.splice(myLikeFiles.indexOf(fid), 1)
             }
-            while (myLikeFiles.indexOf(fid)!==-1)
+            while (myLikeFiles.indexOf(fid) !== -1)
             this.myLikeFiles = myLikeFiles
           })
           .catch(err => {
@@ -255,18 +257,22 @@
     background-attachment: fixed
   }
 
-  li.select{
+  li.select {
     background: aliceblue !important;
   }
-  li.select a{
+
+  li.select a {
     color: #101010 !important;
   }
-  li.select a:hover{
+
+  li.select a:hover {
     color: #101010 !important;
   }
-  li.select a:visited{
+
+  li.select a:visited {
     color: #101010 !important;
   }
+
   .profile-thumbnail {
     position: absolute;
   }
