@@ -38,7 +38,6 @@
     name: "MyFiles",
     components: {Pagination},
     computed: mapState([
-      'user',
       'myLikeFileIds'
     ]),
     data() {
@@ -75,7 +74,7 @@
       },
       getCount() {
         this.$store.dispatch('getFilesCount')
-          .then(res=> this.urlCount = res)
+          .then(res=> this.fileCount = res)
       }
     },
     mounted() {
