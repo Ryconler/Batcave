@@ -154,7 +154,10 @@
               this.$emit('setCookie','username',registerInfo.username)  // 存储cookie
               this.$emit('setCookie','password',registerInfo.password)
               this.$emit('clearErrMsg')
-              this.$router.push('/')
+              this.$axios.post('/api/login',registerInfo)
+                .then(res=> {
+                  this.$router.push('/')
+                })
             })
             .catch(err=>{
               this.$emit('addErrMsg',err.response.data.message)
