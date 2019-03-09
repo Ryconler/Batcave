@@ -7,7 +7,7 @@
     <ul class="posts">
       <li class="post" v-for="url of urls">
         <div class="post-title">
-          <a href="javascript: void(0);" v-if="myLikeURLs.indexOf(url.id)!==-1" @click="unlikeURL(url.id)"><img src="../assets/images/liked.png"
+          <a href="javascript: void(0);" v-if="myLikeURLIds.indexOf(url.id)!==-1" @click="unlikeURL(url.id)"><img src="../assets/images/liked.png"
                                                                                      style="width: 40px;"></a>
           <a href="javascript: void(0);" v-else @click="likeURL(url.id)"><img src="../assets/images/like.png" style="width: 40px;"></a>
           <span style="color:#606060">[{{url.type}}]</span>
@@ -27,11 +27,13 @@
 
 <script>
   import Pagination from "./reusable/Pagination";
-
+  import { mapState } from 'vuex'
   export default {
     name: "MyLikes",
     components: {Pagination},
-    props: ['user','myLikeURLs'],  // 父组件的参数
+    computed: mapState([
+      'myLikeURLIds',
+    ]),
     data() {
       return {
         urls: [],
@@ -40,43 +42,31 @@
       }
     },
     methods: {
+      unlikeURL(rid) {
+        this.$store.dispatch('unlikeURL', rid)
+      },
+      likeURL(rid) {
+        this.$store.dispatch('likeURL', rid)
+      },
       setPage(page) {
         this.page = page
       },
+
       getURLs() {
-        const id = this.user ? this.user.id : undefined
-        this.$axios.get('/api/urls/limit/' + id + '?page='+this.page)
-          .then(res => {
-            this.urls = res.data.urls
-          })
+        this.$store.dispatch('getMyURLs',this.page)
+          .then(res=>this.urls = res)
       },
       getCount() {
-        const id = this.user ? this.user.id : undefined
-        this.$axios.get('/api/urls/count/' + id)
-          .then(res => {
-            this.urlCount = res.data.count
-          })
-          .catch(err => {
-            console.log(err.response.data.message);
-          })
+        this.$store.dispatch('getMyURLsCount')
+          .then(res=>this.urlCount = res)
       },
-      unlikeURL(rid){
-        this.$emit('unlikeURL',rid)
-      },
-      likeURL(rid){
-        this.$emit('likeURL',rid)
-      }
     },
     mounted() {
-      this.$emit('selectNone')
+      this.$store.commit('selectNone')
       this.getURLs()
       this.getCount()
     },
     watch: {
-      user() {
-        this.getURLs()
-        this.getCount()
-      },
       page() {
         this.getURLs()
       }

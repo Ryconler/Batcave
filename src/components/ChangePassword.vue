@@ -72,19 +72,12 @@
         let c = this.validatePsw(this.password)
         let d = this.validateRep(this.rePassword)
         if(c && d){
-          this.$axios.put('/api/change-password',{newPassword:this.password})
-            .then(res=>{
-              alert('更改成功')
-              this.$emit('logout')
-            })
-            .catch(err=>{
-              console.log(err.response.data.message);
-            })
+          this.$store.dispatch('changePassword',this.password)
         }
       }
     },
     mounted(){
-      this.$emit('selectNone')
+      this.$store.commit('selectNone')
     },
     watch:{
       password(val) {

@@ -62,19 +62,13 @@
               content: this.http + '://' + this.content,
               type:this.type
             }
-            this.$axios.post('/api/urls/url', url)
-              .then(res=>{
-                this.$router.push('/my/urls')
-              })
-              .catch(err=>{
-                console.log(err.response.data.message);
-              })
+            this.$store.dispatch('share',url)
           }
         }
       }
     },
     mounted() {
-      this.$emit('selectNone')
+      this.$store.commit('selectNone')
     }
 
   }

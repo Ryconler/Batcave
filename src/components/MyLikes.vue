@@ -4,10 +4,10 @@
     <ul class="posts">
       <li class="post" v-for="url of urls">
         <div class="post-title">
-          <a href="javascript: void(0);" v-if="myLikeURLs.indexOf(url.rid)!==-1" @click="unlikeURL(url.rid)"><img
+          <a href="javascript: void(0);" v-if="myLikeURLIds.indexOf(url.rid)!==-1" @click="unlikeURL(url.rid)"><img
             src="../assets/images/liked.png" style="width: 40px;"></a>
           <a href="javascript: void(0);" v-else @click="likeURL(url.rid)"><img src="../assets/images/like.png"
-                                                                              style="width: 40px;"></a>
+                                                                               style="width: 40px;"></a>
           <span style="color:#606060">[{{url.type}}]</span>
           <a :href="url.content" target="_blank">{{url.title}}</a>
         </div>
@@ -26,10 +26,10 @@
     <ul class="posts">
       <li class="post" v-for="file of files">
         <div class="post-title">
-          <a href="javascript: void(0);" v-if="myLikeFiles.indexOf(file.fid)!==-1" @click="unlikeFile(file.fid)"><img
+          <a href="javascript: void(0);" v-if="myLikeFileIds.indexOf(file.fid)!==-1" @click="unlikeFile(file.fid)"><img
             src="../assets/images/liked.png" style="width: 40px;"></a>
           <a href="javascript: void(0);" v-else @click="likeFile(file.fid)"><img src="../assets/images/like.png"
-                                                                                style="width: 40px;"></a>
+                                                                                 style="width: 40px;"></a>
           <span style="color:#606060">[{{file.type}}]</span>
           <router-link :to="{name: 'FileDetail', params: {id: file.fid} }">{{file.title}}</router-link>
         </div>
@@ -48,11 +48,15 @@
 
 <script>
   import Pagination from "./reusable/Pagination";
+  import {mapState} from 'vuex'
 
   export default {
     name: "MyLikes",
     components: {Pagination},
-    props: ['myLikeURLs', 'myLikeFiles'],
+    computed: mapState([
+      'myLikeURLIds',
+      'myLikeFileIds'
+    ]),
     data() {
       return {
         urls: [],
@@ -64,76 +68,52 @@
       }
     },
     methods: {
+      unlikeURL(rid) {
+        this.$store.dispatch('unlikeURL', rid)
+      },
+      likeURL(rid) {
+        this.$store.dispatch('likeURL', rid)
+      },
+      unlikeFile(fid) {
+        this.$store.dispatch('unlikeFile', fid)
+      },
+      likeFile(fid) {
+        this.$store.dispatch('likeFile', fid)
+      },
       setURLPage(page) {
         this.urlPage = page
       },
       getURLCount() {
-        this.$axios.get('/api/likes/urls/id')
-          .then(res => {
-            this.urlCount = res.data.likes.length
-          })
-          .catch(err => {
-            console.log(err.response.data.message);
-          })
+        this.urlCount = this.$store.state.myLikeURLIds.length
       },
       getURLs() {
-        this.$axios.get('/api/likes/urls/limit?page=' + this.urlPage)
-          .then(res=>{
-            this.urls = res.data.likes
-          })
-          .catch(err=>{
-            console.log(err.response.data.message);
-          })
+        this.$store.dispatch('getMyLikeURLs', this.urlPage)
+          .then(res => this.urls = res)
       },
       setFilePage(page) {
         this.filePage = page
       },
       getFileCount() {
-        this.$axios.get('/api/likes/files/id')
-          .then(res => {
-            this.fileCount = res.data.likes.length
-          })
-          .catch(err=>{
-            console.log(err.response.data.message);
-          })
+        this.fileCount = this.$store.state.myLikeFileIds.length
       },
       getFiles() {
-        this.$axios.get('/api/likes/files/limit?page=' + this.filePage)
-          .then(res=>{
-            this.files = res.data.likes
-          })
-          .catch(err=>{
-            console.log(err.response.data.message);
-          })
+        this.$store.dispatch('getMyLikeFiles', this.filePage)
+          .then(res => this.files = res)
       },
-      unlikeURL(rid) {
-        this.$emit('unlikeURL', rid)
-      },
-      likeURL(rid) {
-        this.$emit('likeURL', rid)
-      },
-      likeFile(fid) {
-        this.$emit('likeFile', fid)
-      },
-      unlikeFile(fid) {
-        this.$emit('unlikeFile', fid)
-      }
     },
     mounted() {
-      this.$emit('selectNone')
+      this.$store.commit('selectNone')
       this.getURLs()
       this.getFiles()
       this.getURLCount()
       this.getFileCount()
     },
-    watch:{
-      urlPage(){
+    watch: {
+      urlPage() {
         this.getURLs()
-        this.getURLCount()
       },
-      filePage(){
+      filePage() {
         this.getFiles()
-        this.getFileCount()
       }
     }
   }

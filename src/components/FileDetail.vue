@@ -43,18 +43,13 @@
     methods: {
       getFile() {
         const id = this.$route.params.id
-        this.$axios.get('/api/files/file/' + id)
-          .then(res => {
-            this.file = res.data.file
-          })
-          .catch(err => {
-            console.log(err.response.data.message);
-          })
+        this.$store.dispatch('getFile',id)
+          .then(res=> this.file = res)
       }
     },
     mounted() {
+      this.$store.commit('selectNone')
       this.getFile()
-      this.$emit('selectNone')
     }
   }
 </script>

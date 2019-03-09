@@ -13,7 +13,7 @@
     <ul class="posts">
       <li class="post" v-for="file of files">
         <div class="post-title">
-          <a href="javascript: void(0);" v-if="myLikeFiles.indexOf(file.id)!==-1" @click="unlikeFile(file.id)"><img src="../assets/images/liked.png" style="width: 40px;"></a>
+          <a href="javascript: void(0);" v-if="myLikeFileIds.indexOf(file.id)!==-1" @click="unlikeFile(file.id)"><img src="../assets/images/liked.png" style="width: 40px;"></a>
           <a href="javascript: void(0);" v-else @click="likeFile(file.id)"><img src="../assets/images/like.png" style="width: 40px;"></a>
           <span style="color:#606060">[{{file.type}}]</span>
           <router-link :to="{name: 'FileDetail', params: {id: file.id} }">{{file.title}}</router-link>
@@ -33,11 +33,14 @@
 
 <script>
   import Pagination from "./reusable/Pagination";
-
+  import { mapState } from 'vuex'
   export default {
     name: "MyFiles",
     components: {Pagination},
-    props: ['myLikeFiles'],
+    computed: mapState([
+      'user',
+      'myLikeFileIds'
+    ]),
     data() {
       return {
         files: [
@@ -60,33 +63,23 @@
       setPage(page){
         this.page = page
       },
-      getFiles(){
-        this.$axios.get('/api/files/limit?page='+this.page)
-          .then(res=>{
-            this.files = res.data.files
-          })
-          .catch(err=>{
-            console.log(err.response.data.message);
-          })
-      },
-      getCount(){
-        this.$axios.get('/api/files/count')
-          .then(res=>{
-            this.fileCount = res.data.count
-          })
-          .catch(err=>{
-            console.log(err.response.data.message);
-          })
+      unlikeFile(fid) {
+        this.$store.dispatch('unlikeFile', fid)
       },
       likeFile(fid) {
-        this.$emit('likeFile',fid)
+        this.$store.dispatch('likeFile', fid)
       },
-      unlikeFile(fid) {
-        this.$emit('unlikeFile',fid)
+      getFiles() {
+        this.$store.dispatch('getFiles',this.page)
+          .then(res => this.files = res)
+      },
+      getCount() {
+        this.$store.dispatch('getFilesCount')
+          .then(res=> this.urlCount = res)
       }
     },
     mounted() {
-      this.$emit('selectFile')
+      this.$store.commit('selectFile')
       this.getFiles()
       this.getCount()
     },

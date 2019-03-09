@@ -8,7 +8,7 @@
     <ul class="posts">
       <li class="post" v-for="file of publicFiles">
         <div class="post-title">
-          <a href="javascript: void(0);" v-if="myLikeFiles.indexOf(file.id)!==-1" @click="unlikeFile(file.id)"><img src="../assets/images/liked.png"
+          <a href="javascript: void(0);" v-if="myLikeFileIds.indexOf(file.id)!==-1" @click="unlikeFile(file.id)"><img src="../assets/images/liked.png"
                                                                                        style="width: 40px;"></a>
           <a href="javascript: void(0);" v-else @click="likeFile(file.id)"><img src="../assets/images/like.png" style="width: 40px;"></a>
           <span style="color:#606060">[{{file.type}}]</span>
@@ -29,7 +29,7 @@
     <ul class="posts">
       <li class="post" v-for="file of privateFiles">
         <div class="post-title">
-          <a href="javascript: void(0);" v-if="myLikeFiles.indexOf(file.id)!==-1" @click="unlikeFile(file.id)"><img src="../assets/images/liked.png"
+          <a href="javascript: void(0);" v-if="myLikeFileIds.indexOf(file.id)!==-1" @click="unlikeFile(file.id)"><img src="../assets/images/liked.png"
                                                                                        style="width: 40px;"></a>
           <a href="javascript: void(0);" v-else  @click="likeFile(file.id)"><img src="../assets/images/like.png" style="width: 40px;"></a>
           <span style="color:#606060">[{{file.type}}]</span>
@@ -50,11 +50,13 @@
 
 <script>
   import Pagination from "./reusable/Pagination";
-
+  import { mapState } from 'vuex'
   export default {
     name: "MyFiles",
     components: {Pagination},
-    props: ['user','myLikeFiles'],  // 父组件的参数
+    computed: mapState([
+      'myLikeFileIds',
+    ]),
     data() {
       return {
         publicFiles: [],
@@ -66,6 +68,12 @@
       }
     },
     methods: {
+      unlikeFile(fid) {
+        this.$store.dispatch('unlikeFile', fid)
+      },
+      likeFile(fid) {
+        this.$store.dispatch('likeFile', fid)
+      },
       setPubPage(page) {
         this.pubPage = page
       },
@@ -73,48 +81,24 @@
         this.priPage = page
       },
       getPublicFiles() {
-        const id = this.user ? this.user.id : undefined
-        this.$axios.get('/api/files/public/limit/' + id + '?page=' + this.pubPage)
-          .then(res => {
-            this.publicFiles = res.data.files
-          })
+        this.$store.dispatch('getMyPublicFiles',this.pubPage)
+          .then(res=>this.publicFiles = res)
       },
       getPrivateFiles() {
-        const id = this.user ? this.user.id : undefined
-        this.$axios.get('/api/files/private/limit/' + id + '?page=' + this.priPage)
-          .then(res => {
-            this.privateFiles = res.data.files
-          })
+        this.$store.dispatch('getMyPrivateFiles',this.priPage)
+          .then(res=>this.privateFiles = res)
       },
       getPubCount() {
-        const id = this.user ? this.user.id : undefined
-        this.$axios.get('/api/files/public/count/' + id)
-          .then(res => {
-            this.pubFileCount = res.data.count
-          })
-          .catch(err => {
-            console.log(err.response.data.message);
-          })
+        this.$store.dispatch('getMyPublicFilesCount')
+          .then(res=>this.pubFileCount = res)
       },
       getPriCount() {
-        const id = this.user ? this.user.id : undefined
-        this.$axios.get('/api/files/private/count/' + id)
-          .then(res => {
-            this.priFileCount = res.data.count
-          })
-          .catch(err => {
-            console.log(err.response.data.message);
-          })
-      },
-      likeFile(fid) {
-        this.$emit('likeFile',fid)
-      },
-      unlikeFile(fid) {
-        this.$emit('unlikeFile',fid)
+        this.$store.dispatch('getMyPrivateFilesCount')
+          .then(res=>this.priFileCount = res)
       }
     },
     mounted() {
-      this.$emit('selectNone')
+      this.$store.commit('selectNone')
       this.getPublicFiles()
       this.getPrivateFiles()
       this.getPubCount()
@@ -122,12 +106,6 @@
 
     },
     watch: {
-      user() {
-        this.getPublicFiles()
-        this.getPrivateFiles()
-        this.getPubCount()
-        this.getPriCount()
-      },
       pubPage(){
         this.getPublicFiles()
       },

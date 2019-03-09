@@ -148,25 +148,12 @@
             email: this.email,
             password: this.password,
           }
-          this.$axios.post('/api/register',registerInfo)
-            .then(res=> {
-              this.$emit('setUser',res.data.user)
-              this.$emit('setCookie','username',registerInfo.username)  // 存储cookie
-              this.$emit('setCookie','password',registerInfo.password)
-              this.$emit('clearErrMsg')
-              this.$axios.post('/api/login',registerInfo)
-                .then(res=> {
-                  this.$router.push('/')
-                })
-            })
-            .catch(err=>{
-              this.$emit('addErrMsg',err.response.data.message)
-            })
+          this.$store.dispatch('register',registerInfo)
         }
       }
     },
-    beforeCreate(){
-      this.$emit('selectNone')
+    mounted(){
+      this.$store.commit('selectNone')
     },
     watch: { // 字段trim后发生改变了并触发了blur事件（lazy），进行一次验证
       username(val) {

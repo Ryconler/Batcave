@@ -70,21 +70,20 @@
         formData.append('describe', this.describe)
         formData.append('private', this.private ? '1' : '0')
         this.reset()
-        this.$axiosInstance.post('/api/files/file', formData)
-          .then(res => {
-            this.info = res.data.message
+        this.$store.dispatch('upload',formData)
+          .then(res=>{
+            this.info = res
             setTimeout(()=> {
               this.$router.push('/my/files')
             },500)
           })
-          .catch(err => {
+          .catch(err=>{
             this.info = '上传失败，换个文件试试？'
-            console.log(err.response.data.message);
           })
       }
     },
     mounted() {
-      this.$emit('selectNone')
+      this.$store.commit('selectNone')
     }
   }
 </script>

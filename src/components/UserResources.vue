@@ -4,8 +4,10 @@
     <ul class="posts">
       <li class="post" v-for="url of urls">
         <div class="post-title">
-          <a href="javascript: void(0);" v-if="myLikeURLs.indexOf(url.id)!==-1" @click="unlikeURL(url.id)"><img src="../assets/images/liked.png" style="width: 40px;"></a>
-          <a href="javascript: void(0);" v-else @click="likeURL(url.id)"><img src="../assets/images/like.png" style="width: 40px;"></a>
+          <a href="javascript: void(0);" v-if="myLikeURLIds.indexOf(url.id)!==-1" @click="unlikeURL(url.id)"><img
+            src="../assets/images/liked.png" style="width: 40px;"></a>
+          <a href="javascript: void(0);" v-else @click="likeURL(url.id)"><img src="../assets/images/like.png"
+                                                                              style="width: 40px;"></a>
           <span style="color:#606060">[{{url.type}}]</span>
           <a :href="url.content" target="_blank">{{url.title}}</a></div>
         <div class="post-info">
@@ -23,8 +25,10 @@
     <ul class="posts">
       <li class="post" v-for="file of files">
         <div class="post-title">
-          <a href="javascript: void(0);" v-if="myLikeFiles.indexOf(file.id)!==-1" @click="unlikeFile(file.id)"><img src="../assets/images/liked.png" style="width: 40px;"></a>
-          <a href="javascript: void(0);" v-else @click="likeFile(file.id)"><img src="../assets/images/like.png" style="width: 40px;"></a>
+          <a href="javascript: void(0);" v-if="myLikeFileIds.indexOf(file.id)!==-1" @click="unlikeFile(file.id)"><img
+            src="../assets/images/liked.png" style="width: 40px;"></a>
+          <a href="javascript: void(0);" v-else @click="likeFile(file.id)"><img src="../assets/images/like.png"
+                                                                                style="width: 40px;"></a>
           <span style="color:#606060">[{{file.type}}]</span>
           <router-link :to="{name: 'FileDetail',  params: {id: file.id} }">{{file.title}}</router-link>
         </div>
@@ -43,22 +47,39 @@
 
 <script>
   import Pagination from "./reusable/Pagination";
+  import {mapState} from 'vuex'
+
   export default {
     name: "UserResources",
     components: {Pagination},
-    props:['myLikeURLs','myLikeFiles'],
-    data(){
-      return{
+    computed: mapState([
+      'myLikeURLIds',
+      'myLikeFileIds'
+    ]),
+    data() {
+      return {
         id: 0,
         urls: [],
         urlCount: 0,
-        urlPage:1,
+        urlPage: 1,
         files: [],
         fileCount: 0,
-        filePage:1
+        filePage: 1
       }
     },
-    methods:{
+    methods: {
+      unlikeURL(rid) {
+        this.$store.dispatch('unlikeURL', rid)
+      },
+      likeURL(rid) {
+        this.$store.dispatch('likeURL', rid)
+      },
+      unlikeFile(fid) {
+        this.$store.dispatch('unlikeFile', fid)
+      },
+      likeFile(fid) {
+        this.$store.dispatch('likeFile', fid)
+      },
       setURLPage(page) {
         this.urlPage = page
       },
@@ -66,56 +87,35 @@
         this.filePage = page
       },
       getURLCount() {
-        this.$axios.get('/api/urls/count/' + this.id)
-          .then(res => {
-            this.urlCount = res.data.count
-          })
+        this.$store.dispatch('getOtherURLsCount', this.id)
+          .then(res => this.urlCount = res)
       },
       getFileCount() {
-        this.$axios.get('/api/files/public/count/' + this.id)
-          .then(res => {
-            this.fileCount = res.data.count
-          })
+        this.$store.dispatch('getOtherPublicFilesCount', this.id)
+          .then(res => this.fileCount = res)
       },
       getURLs() {
-        this.$axios.get('/api/urls/limit5/' + this.id + '?page='+this.urlPage)
-          .then(res => {
-            this.urls = res.data.urls
-          })
+        this.$store.dispatch('getOtherURLs', {uid: this.id, page: this.urlPage})
+          .then(res => this.urls = res)
       },
       getFiles() {
-        this.$axios.get('/api/files/public/limit/' + this.id + '?page='+this.filePage)
-          .then(res => {
-            this.files = res.data.files
-          })
-      },
-      unlikeURL(rid){
-        this.$emit('unlikeURL',rid)
-      },
-      likeURL(rid){
-        this.$emit('likeURL',rid)
-      },
-      likeFile(fid) {
-        this.$emit('likeFile',fid)
-      },
-      unlikeFile(fid) {
-        this.$emit('unlikeFile',fid)
+        this.$store.dispatch('getOtherPublicFiles', {uid: this.id, page: this.filePage})
+          .then(res => this.files = res)
       }
     },
-
     mounted() {
-      this.$emit('selectNone')
       this.id = this.$route.params.id
+      this.$store.commit('selectNone')
       this.getURLs()
       this.getFiles()
       this.getFileCount()
       this.getURLCount()
     },
-    watch:{
-      urlPage(){
+    watch: {
+      urlPage() {
         this.getURLs()
       },
-      filePage(){
+      filePage() {
         this.getFiles()
       }
     }

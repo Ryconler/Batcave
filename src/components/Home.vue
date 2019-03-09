@@ -55,22 +55,24 @@ export default {
       ],
     }
   },
+  methods:{
+    getURLs(){
+      this.$store.dispatch('getHomeURLs')
+        .then(res=>{
+          this.urls = res
+        })
+    },
+    getFiles(){
+      this.$store.dispatch('getHomeFiles')
+        .then(res=>{
+          this.files = res
+        })
+    }
+  },
   mounted() {
-    this.$emit('selectHome')
-    this.$axios.get('/api/urls/home')
-      .then(res => {
-        this.urls = res.data.urls
-      })
-      .catch(err => {
-        console.log(err.response.message);
-      })
-    this.$axios.get('/api/files/home')
-      .then(res => {
-        this.files = res.data.files
-      })
-      .catch(err => {
-        console.log(err.response.message);
-      })
+    this.$store.commit('selectHome')
+    this.getURLs()
+    this.getFiles()
   }
 }
 </script>
