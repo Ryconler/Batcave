@@ -50,22 +50,10 @@
     data(){
       return{
         id: 0,
-        urls: [
-          {id:0,owner: {id:0}},
-          {id:1,owner: {id:1}},
-          {id:2,owner: {id:2}},
-          {id:3,owner: {id:3}},
-          {id:4,owner: {id:4}},
-        ],
+        urls: [],
         urlCount: 0,
         urlPage:1,
-        files: [
-          {id:0,owner: {id:0}},
-          {id:1,owner: {id:1}},
-          {id:2,owner: {id:2}},
-          {id:3,owner: {id:3}},
-          {id:4,owner: {id:4}},
-        ],
+        files: [],
         fileCount: 0,
         filePage:1
       }
@@ -82,17 +70,11 @@
           .then(res => {
             this.urlCount = res.data.count
           })
-          .catch(err => {
-            console.log(err.response.data.message);
-          })
       },
       getFileCount() {
         this.$axios.get('/api/files/public/count/' + this.id)
           .then(res => {
             this.fileCount = res.data.count
-          })
-          .catch(err => {
-            console.log(err.response.data.message);
           })
       },
       getURLs() {

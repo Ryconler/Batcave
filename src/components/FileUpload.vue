@@ -12,8 +12,8 @@
         <label for="type">类别</label>
         <select v-model="type" class="form-control" id="type">
           <option value="image">图片</option>
-          <option value="video">视频</option>
           <option value="document">文档</option>
+          <option value="setup">安装包</option>
           <option value="compress">压缩包</option>
           <option value="other">其他</option>
         </select>
@@ -51,7 +51,7 @@
         private: false,
         describe: '',
         file: null,
-        info:''
+        info:'服务器太小了，文件大小请不要超过10M，不要恶意上传'
       }
     },
     methods: {
@@ -78,23 +78,13 @@
             },500)
           })
           .catch(err => {
-            this.info = '上传失败'
+            this.info = '上传失败，换个文件试试？'
             console.log(err.response.data.message);
           })
       }
     },
     mounted() {
       this.$emit('selectNone')
-      this.$axios.get('/api/logstatus')
-        .then(res => {
-          if(!res.data.user){
-            this.$router.replace('/login')
-          }
-          if (res.data.message) {
-            this.$emit('delCookie','username')
-            this.$emit('delCookie','password')
-          }
-        })
     }
   }
 </script>

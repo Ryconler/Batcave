@@ -12,7 +12,7 @@
           <a :href="url.content" target="_blank">{{url.title}}</a>
         </div>
         <div class="post-info">
-          &nbsp;喜欢与&nbsp;<em>{{url.like_date}}</em>
+          &nbsp;喜欢于&nbsp;<em>{{url.like_date}}</em>
         </div>
       </li>
     </ul>
@@ -121,16 +121,6 @@
     },
     mounted() {
       this.$emit('selectNone')
-      this.$axios.get('/api/logstatus')
-        .then(res => {
-          if(!res.data.user){
-            this.$router.replace('/login')
-          }
-          if (res.data.message) {
-            this.$emit('delCookie','username')
-            this.$emit('delCookie','password')
-          }
-        })
       this.getURLs()
       this.getFiles()
       this.getURLCount()

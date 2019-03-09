@@ -58,16 +58,6 @@
     },
     beforeCreate() {
       this.$emit('selectNone')
-      this.$axios.get('/api/logstatus')
-        .then(res => {
-          if(res.data.user){
-            this.$router.replace('/')
-          }
-          if (res.data.message) {
-            this.$emit('delCookie','username')
-            this.$emit('delCookie','password')
-          }
-        })
     }
   }
 </script>

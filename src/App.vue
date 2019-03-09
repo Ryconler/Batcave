@@ -36,15 +36,16 @@
                   </router-link>
                 </li>
                 <li>
-                  <router-link to="/my/urls">我的链接<img src="./assets/images/liked.png" style="width: 30px;">
+                  <router-link to="/my/urls">我的链接<img src="./assets/images/url.png" style="margin-left:5px; width: 20px;">
                   </router-link>
                 </li>
                 <li>
-                  <router-link to="/my/files">我的文件<img src="./assets/images/liked.png" style="width: 30px;">
+                  <router-link to="/my/files">我的文件<img src="./assets/images/file.png" style="margin-left:5px; width: 20px;">
                   </router-link>
                 </li>
                 <li>
-                  <router-link to="/change-password">修改密码&nbsp;<img src="./assets/images/lock.png" style="width: 15px;">
+                  <router-link to="/change-password">修改密码&nbsp;<img src="./assets/images/lock.png"
+                                                                    style="margin-left:4px; width: 15px;">
                   </router-link>
                 </li>
                 <li><a href="javascript:void(0);" @click="logout()">注销</a></li>

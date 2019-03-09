@@ -19,7 +19,7 @@
           <router-link :to="{name: 'FileDetail', params: {id: file.id} }">{{file.title}}</router-link>
         </div>
         <div class="post-info">
-          <router-link :to="{name: 'UserResources', params: {id: file.owner.id} }">{{file.owner.username}}</router-link>&nbsp;分享于&nbsp;<em>{{file.date}}</em>
+          <router-link :to="{name: 'UserResources', params: {id: file.owner.id} }">{{file.owner.username}}</router-link>&nbsp;分享于&nbsp;<em>{{file.create_date}}</em>
         </div>
       </li>
     </ul>
