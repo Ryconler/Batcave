@@ -1,7 +1,8 @@
 <template>
   <div>
-    <h1>我喜欢的资源</h1>
+    <h1>我喜欢的链接</h1>
     <ul class="posts">
+      <p v-if="urls.length===0">你还没有喜欢的链接哦，快去链接列表点击左侧的蝙蝠图标表示喜欢吧。</p>
       <li class="post" v-for="url of urls">
         <div class="post-title">
           <a href="javascript: void(0);" v-if="myLikeURLIds.indexOf(url.rid)!==-1" @click="unlikeURL(url.rid)"><img
@@ -24,6 +25,7 @@
 
     <h1>我喜欢的文件</h1>
     <ul class="posts">
+      <p v-if="files.length===0">你还没有喜欢的文件哦，快去文件列表点击左侧的蝙蝠图标表示喜欢吧。</p>
       <li class="post" v-for="file of files">
         <div class="post-title">
           <a href="javascript: void(0);" v-if="myLikeFileIds.indexOf(file.fid)!==-1" @click="unlikeFile(file.fid)"><img
@@ -64,7 +66,7 @@
         urlCount: 0,
         files: [],
         filePage: 1,
-        fileCount: 0,
+        fileCount: 0
       }
     },
     methods: {
@@ -88,7 +90,12 @@
       },
       getURLs() {
         this.$store.dispatch('getMyLikeURLs', this.urlPage)
-          .then(res => this.urls = res)
+          .then(res => {
+            this.urls = res
+            if(this.urls.length===0 && this.urlPage!==1){
+              this.urlPage = 1
+            }
+          })
       },
       setFilePage(page) {
         this.filePage = page
@@ -111,9 +118,12 @@
     watch: {
       urlPage() {
         this.getURLs()
+        this.getURLCount()
       },
       filePage() {
         this.getFiles()
+        this.getFileCount()
+
       }
     }
   }
