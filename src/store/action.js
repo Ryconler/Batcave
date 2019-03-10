@@ -221,6 +221,14 @@ export default {
         setCookie('password', registerInfo.password)
         localStorage.setItem('login','yes')
         router.push('/')
+        axios.get('/api/likes/urls/id')
+          .then(res => {
+            commit('setMyLikeURLIds', res.data.likes)
+          })
+        axios.get('/api/likes/files/id')
+          .then(res => {
+            commit('setMyLikeFileIds', res.data.likes)
+          })
       })
       .catch(err => {
         commit('addErrMsg', err.response.data.message)
