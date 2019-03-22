@@ -80,6 +80,15 @@ export default {
         commit('setMyLikeURLIds', myLikeURLIds)
       })
   },
+  deleteURL({state},rid){
+    return new Promise(resolve => {
+      axios.delete('/api/urls/url/'+rid)
+        .then(res=>{
+          resolve(res.data.message)
+        })
+        .catch(err=>{})
+    })
+  },
   likeFile({state, commit}, fid) {
     axios.post('/api/likes/like', {fid: fid})
       .then(res => {
@@ -97,7 +106,15 @@ export default {
         commit('setMyLikeFileIds', myLikeFileIds)
       })
   },
-
+  deleteFile({state},fid){
+    return new Promise(resolve => {
+      axios.delete('/api/files/file/'+fid)
+        .then(res=>{
+          resolve(res.data.message)
+        })
+        .catch(err=>{})
+    })
+  },
   /* 首页 */
   getHomeURLs() {
     return new Promise((resolve, reject) => {
@@ -227,7 +244,7 @@ export default {
         setCookie('username', registerInfo.username)
         setCookie('password', registerInfo.password)
         localStorage.setItem('login','yes')
-        router.push('/')
+        router.replace('/')
         axios.get('/api/likes/urls/id')
           .then(res => {
             commit('setMyLikeURLIds', res.data.likes)

@@ -15,7 +15,7 @@
           <router-link :to="{name: 'FileDetail', params: {id: file.id} }">{{file.title}}</router-link>
         </div>
         <div class="post-info">
-          &nbsp;上传于&nbsp;<em>{{file.create_date}}</em>
+          &nbsp;上传于&nbsp;<em>{{file.create_date}}</em>&nbsp;<a href="javascript:void(0);" @click="deleteFile(file.id)">删除</a>
         </div>
       </li>
     </ul>
@@ -36,7 +36,7 @@
           <router-link :to="{name: 'FileDetail', params: {id: file.id} }">{{file.title}}</router-link>
         </div>
         <div class="post-info">
-          &nbsp;上传于&nbsp;<em>{{file.create_date}}</em>
+          &nbsp;上传于&nbsp;<em>{{file.create_date}}</em>&nbsp;<a href="javascript:void(0);" @click="deleteFile(file.id)">删除</a>
         </div>
       </li>
     </ul>
@@ -73,6 +73,28 @@
       },
       likeFile(fid) {
         this.$store.dispatch('likeFile', fid)
+      },
+      deleteFile(fid){
+        let con = window.confirm('确认删除吗？')
+        if(con){
+          this.$store.dispatch('deleteFile', fid)
+            .then(res=>{
+              let pub =0
+              let pri =0
+              for(let file of this.publicFiles){
+                if(file.id === fid){
+                  this.publicFiles.splice(pub,1)
+                }
+                pub++
+              }
+              for(let file of this.privateFiles){
+                if(file.id === fid){
+                  this.privateFiles.splice(pri,1)
+                }
+                pri++
+              }
+            })
+        }
       },
       setPubPage(page) {
         this.pubPage = page

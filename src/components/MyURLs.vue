@@ -13,7 +13,7 @@
           <span style="color:#606060">[{{url.type}}]</span>
           <a :href="url.content" target="_blank">{{url.title}}</a></div>
         <div class="post-info">
-          &nbsp;分享于&nbsp;<em>{{url.create_date}}</em>
+          &nbsp;分享于&nbsp;<em>{{url.create_date}}</em>&nbsp;<a href="javascript:void(0);" @click="deleteURL(url.id)">删除</a>
         </div>
       </li>
     </ul>
@@ -47,6 +47,21 @@
       },
       likeURL(rid) {
         this.$store.dispatch('likeURL', rid)
+      },
+      deleteURL(rid){
+        let con = window.confirm('确认删除吗？')
+        if(con){
+          this.$store.dispatch('deleteURL', rid)
+            .then(res=>{
+              let i =0
+              for(let url of this.urls){
+                if(url.id === rid){
+                  this.urls.splice(i,1)
+                }
+                i++
+              }
+            })
+        }
       },
       setPage(page) {
         this.page = page
