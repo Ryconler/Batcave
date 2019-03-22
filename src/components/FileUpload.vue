@@ -62,24 +62,33 @@
         [this.title, this.type, this.private, this.describe, this.file] = ['', 'other', false, '', null]
       },
       submit() {
-        this.info = '上传中...'
-        let formData = new FormData();
-        formData.append('file', this.file);
-        formData.append('title', this.title)
-        formData.append('type', this.type)
-        formData.append('describe', this.describe)
-        formData.append('private', this.private ? '1' : '0')
-        this.reset()
-        this.$store.dispatch('upload',formData)
-          .then(res=>{
-            this.info = res
-            setTimeout(()=> {
-              this.$router.push('/my/files')
-            },500)
-          })
-          .catch(err=>{
-            this.info = '上传失败，换个文件试试？'
-          })
+        if(this.title&&this.type&&this.file){
+          console.log(this.file.size);
+          if (this.title.length > 20) this.$store.commit('addErrMsg', '标题长度不超过20')
+          else if(this.describe.length > 100) this.$store.commit('addErrMsg', '文件描述不要超过100个字')
+          else if (this.file.size > 10240000) this.$store.commit('addErrMsg', '文件大小不要超过10M')
+          else {
+            console.log(this.file.size);
+            this.info = '上传中...'
+            let formData = new FormData();
+            formData.append('file', this.file);
+            formData.append('title', this.title)
+            formData.append('type', this.type)
+            formData.append('describe', this.describe)
+            formData.append('private', this.private ? '1' : '0')
+            this.reset()
+            this.$store.dispatch('upload',formData)
+              .then(res=>{
+                this.info = res
+                setTimeout(()=> {
+                  this.$router.push('/my/files')
+                },500)
+              })
+              .catch(err=>{
+                this.info = '上传失败，换个文件试试？'
+              })
+          }
+        }
       }
     },
     mounted() {

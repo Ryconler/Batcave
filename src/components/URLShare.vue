@@ -54,8 +54,8 @@
       submit() {
         const cntReg = /^((ht|f)tps?):\/\/[\w\-]+(\.[\w\-]+)+([\w\-.,@?^=%&:\/~+#]*[\w\-@?^=%&\/~+#])?$/;  //网址正则
         if (this.title && this.http && this.content && this.type) {
-          if (this.title.length > 20) this.$emit('addErrMsg', '标题长度不超过20')
-          else if (!cntReg.test(this.http + '://' + this.content)) this.$emit('addErrMsg', 'URL地址格式不正确')
+          if (this.title.length > 20) this.$store.commit('addErrMsg', '标题长度不超过20')
+          else if (!cntReg.test(this.http + '://' + this.content)) this.$store.commit('addErrMsg', 'URL地址格式不正确')
           else {
             const url = {
               title:this.title,

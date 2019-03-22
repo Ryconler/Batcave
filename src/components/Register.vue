@@ -66,17 +66,12 @@
       }
     },
     methods: {
-      addErrMsg(msg) {
-        this.$emit('addErrMsg', msg)
-      },
       validateUsr(val) {
         if (val.length < 3 || val.length > 10) {
-          // this.addErrMsg('用户名长度在3到10个字符')
           this.usrRight = false
           this.usrWrong = true
           return false
         } else if (val.indexOf(' ') >= 0) {
-          // this.addErrMsg('用户名中间不能有空格')
           this.usrRight = false
           this.usrWrong = true
           return false
@@ -90,12 +85,10 @@
         // 邮箱格式
         const reg = new RegExp('^[a-zA-Z0-9][\\w\\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]$')
         if (val.length === 0) {
-          // this.addErrMsg('邮箱不能为空')
           this.emlRight = false
           this.emlWrong = true
           return false
         } else if (!reg.test(val)) {
-          // this.addErrMsg('邮箱格式不正确')
           this.emlRight = false
           this.emlWrong = true
           return false
@@ -108,12 +101,10 @@
       validatePsw(val) {
         const reg = /^[\x20-\x7E]*$/ // 包含所有ASCII字符（含空格）
         if (val.length < 6 || val.length > 16) {
-          // this.addErrMsg('密码长度在6-16之间')
           this.pswRight = false
           this.pswWrong = true
           return false
         } else if (!reg.test(val)) {
-          // this.addErrMsg('密码不能特殊字符')
           this.pswRight = false
           this.pswWrong = true
           return false
