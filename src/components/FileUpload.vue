@@ -68,7 +68,6 @@
           else if(this.describe.length > 100) this.$store.commit('addErrMsg', '文件描述不要超过100个字')
           else if (this.file.size > 10240000) this.$store.commit('addErrMsg', '文件大小不要超过10M')
           else {
-            console.log(this.file.size);
             this.info = '上传中...'
             let formData = new FormData();
             formData.append('file', this.file);
