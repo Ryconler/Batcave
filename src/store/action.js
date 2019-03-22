@@ -161,21 +161,22 @@ export default {
   checkLog({commit}) {
     axios.get('/api/checkLog')
       .then(res => {
-        localStorage.setItem('login','yes')
-        commit('setUser', res.data.user)
-        axios.get('/api/likes/urls/id')
-          .then(res => {
-            commit('setMyLikeURLIds', res.data.likes)
-          })
-        axios.get('/api/likes/files/id')
-          .then(res => {
-            commit('setMyLikeFileIds', res.data.likes)
-          })
-      })
-      .catch(err => {
-        localStorage.setItem('login','no')
-        delCookie('username')
-        delCookie('password')
+        if(res.data.user){
+          localStorage.setItem('login','yes')
+          commit('setUser', res.data.user)
+          axios.get('/api/likes/urls/id')
+            .then(res => {
+              commit('setMyLikeURLIds', res.data.likes)
+            })
+          axios.get('/api/likes/files/id')
+            .then(res => {
+              commit('setMyLikeFileIds', res.data.likes)
+            })
+        }else{
+          localStorage.setItem('login','no')
+          delCookie('username')
+          delCookie('password')
+        }
       })
   },
   logout({commit}) {
@@ -211,6 +212,9 @@ export default {
       .catch(err => {
         commit('addErrMsg', err.response.data.message)
       })
+  },
+  sendTmpPsw({},username){
+    axios.post('/api/sendTmpPsw',{username})
   },
   register({commit}, registerInfo) {
     axios.post('/api/register', registerInfo)
