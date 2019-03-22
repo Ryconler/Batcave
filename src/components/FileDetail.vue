@@ -18,8 +18,9 @@
       <h4>
         <strong>文件描述：</strong>{{file.describe}}
       </h4>
-      <h4><strong><a :href="location" target="_blank" :download="file.location">下载</a></strong></h4>
+      <h4><strong><a href="javascript:void(0);" @click="download">查看或下载</a></strong></h4>
     </div>
+    <div v-else>你无权查看此文件</div>
   </div>
 </template>
 
@@ -31,20 +32,19 @@
         file: null
       }
     },
-    computed: {
-      location() {
-        if (process.env.NODE_ENV === 'development') {
-          return 'http://localhost:5000/' + this.file.location
-        }else {
-          return 'http://batcave.server.jessezhu.cn/' + this.file.location
-        }
-      }
-    },
     methods: {
       getFile() {
         const id = this.$route.params.id
         this.$store.dispatch('getFile',id)
           .then(res=> this.file = res)
+          .catch(err=> {})
+      },
+      download(){
+        if (process.env.NODE_ENV === 'development') {
+          window.open('http://localhost:5000/' + this.file.location)
+        }else {
+          window.open('http://batcave.server.jessezhu.cn/' + this.file.location)
+        }
       }
     },
     mounted() {

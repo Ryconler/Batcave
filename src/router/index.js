@@ -15,8 +15,6 @@ import MyURLs from '../components/MyURLs' // 我的链接
 import MyFiles from '../components/MyFiles' // 我的文件
 import UserResources from '../components/UserResources' // 他人的资源
 
-import store from '../store/index'
-
 Vue.use(Router)
 
 const router = new Router({

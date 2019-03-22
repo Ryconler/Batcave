@@ -134,10 +134,13 @@ export default {
   },
   /* Files页 */
   getFile({},id){
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       axios.get('/api/files/file/' + id)
         .then(res => {
           resolve(res.data.file)
+        })
+        .catch(err=> {
+          reject(err)
         })
     })
   },
