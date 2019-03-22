@@ -18,7 +18,7 @@
       <h4>
         <strong>文件描述：</strong>{{file.describe}}
       </h4>
-      <h4><strong><a :href="location" target="_blank">下载</a></strong></h4>
+      <h4><strong><a :href="file.location" target="_blank" :download="file.location">下载</a></strong></h4>
     </div>
   </div>
 </template>
