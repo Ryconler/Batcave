@@ -120,7 +120,7 @@
       }
     },
     mounted() {
-      this.$store.commit('selectNone')
+      this.$store.commit('selectMyFile')
       this.getPublicFiles()
       this.getPrivateFiles()
       this.getPubCount()

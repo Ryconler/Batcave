@@ -72,7 +72,7 @@
       }
     },
     mounted() {
-      this.$store.commit('selectNone')
+      this.$store.commit('selecLogin')
     }
   }
 </script>

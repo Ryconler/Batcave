@@ -1,6 +1,8 @@
 <template>
   <div>
-    <h1>我喜欢的链接</h1>
+    <div class="page-header">
+      <h1>我喜欢的链接</h1>
+    </div>
     <ul class="posts">
       <p v-if="urls.length===0">你还没有喜欢的链接哦，快去链接列表点击左侧的蝙蝠图标表示喜欢吧。</p>
       <li class="post" v-for="url of urls">
@@ -109,7 +111,7 @@
       },
     },
     mounted() {
-      this.$store.commit('selectNone')
+      this.$store.commit('selectMyLike')
       this.getURLs()
       this.getFiles()
       this.getURLCount()

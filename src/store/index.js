@@ -14,8 +14,13 @@ const state = {
   myLikeFileIds: [],
   homeSelect: true,
   urlSelect: false,
-  fileSelect: false
-
+  fileSelect: false,
+  myLikeSelect: false,
+  myURLSelect: false,
+  myFileSelect: false,
+  changePswSelect: false,
+  login: false,
+  register: false
 }
 export default new Vuex.Store({
   state,

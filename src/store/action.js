@@ -194,6 +194,7 @@ export default {
             })
         }else{
           localStorage.setItem('login','no')
+          commit('setUser', null)
           delCookie('username')
           delCookie('password')
         }

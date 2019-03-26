@@ -77,7 +77,7 @@
       },
     },
     mounted() {
-      this.$store.commit('selectNone')
+      this.$store.commit('selectMyURL')
       this.getURLs()
       this.getCount()
     },

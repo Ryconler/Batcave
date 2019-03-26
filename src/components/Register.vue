@@ -144,7 +144,7 @@
       }
     },
     mounted(){
-      this.$store.commit('selectNone')
+      this.$store.commit('selecRegister')
     },
     watch: { // 字段trim后发生改变了并触发了blur事件（lazy），进行一次验证
       username(val) {

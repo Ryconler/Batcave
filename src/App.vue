@@ -25,25 +25,25 @@
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown" v-if="user">
+            <li class="dropdown" v-if="user" :class="{select: myLikeSelect||myURLSelect||myFileSelect||changePswSelect}">
               <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
                 <img src="./assets/images/head_portrait.png" style="width: 20px;height: 20px; margin-right: 10px">{{
                 user.username }}<b class="caret"></b>
               </a>
               <ul class="dropdown-menu">
-                <li>
+                <li :class="{select: myLikeSelect}">
                   <router-link to="/my/likes">我的喜欢<img src="./assets/images/liked.png" style="width: 30px;">
                   </router-link>
-                </li>
-                <li>
+                </li >
+                <li :class="{select: myURLSelect}">
                   <router-link to="/my/urls">我的链接<img src="./assets/images/url.png" style="margin-left:5px; width: 20px;">
                   </router-link>
                 </li>
-                <li>
+                <li :class="{select: myFileSelect}">
                   <router-link to="/my/files">我的文件<img src="./assets/images/file.png" style="margin-left:5px; width: 20px;">
                   </router-link>
                 </li>
-                <li>
+                <li :class="{select: changePswSelect}">
                   <router-link to="/change-password">修改密码&nbsp;<img src="./assets/images/lock.png"
                                                                     style="margin-left:4px; width: 15px;">
                   </router-link>
@@ -51,10 +51,10 @@
                 <li><a href="javascript:void(0);" @click="logout()">注销</a></li>
               </ul>
             </li>
-            <li v-if="!user">
+            <li v-if="!user" :class="{select: login}">
               <router-link to="/login">登录</router-link>
             </li>
-            <li v-if="!user">
+            <li v-if="!user" :class="{select: register}">
               <router-link to="/register">注册</router-link>
             </li>
           </ul>
@@ -85,6 +85,12 @@
       'homeSelect',
       'urlSelect',
       'fileSelect',
+      'myLikeSelect',
+      'myURLSelect',
+      'myFileSelect',
+      'changePswSelect',
+      'login',
+      'register'
     ]),
     methods: {
       checkLog(){
@@ -109,31 +115,38 @@
     background-attachment: fixed
   }
 
-  li.select {
-    background: aliceblue !important;
+  .navbar{
+    border: none;
+  }
+  .navbar li a{
+    color: #9d9d9d;
+  }
+  .navbar li a:hover{
+    color: aliceblue;
+  }
+  .select {
+    border-bottom: 4px solid aliceblue;
+    color:aliceblue !important;
+  }
+  .select>a {
+    color:aliceblue !important;
+    font-weight: bold;
+  }
+  .dropdown-menu{
+    background: #222;
+  }
+  .dropdown-menu li:hover a{
+    background: transparent;
   }
 
-  li.select a {
-    color: #101010 !important;
+  b.caret{
+    margin-left: 10px;
   }
 
-  li.select a:hover {
-    color: #101010 !important;
+  /* 子组件中的公共样式 */
+  div.page-header{
+    border-bottom: none;
   }
-
-  li.select a:visited {
-    color: #101010 !important;
-  }
-
-  .profile-thumbnail {
-    position: absolute;
-  }
-
-  .profile-header {
-    min-height: 260px;
-    margin-left: 280px;
-  }
-
   div.page-header h1 {
     display: inline;
   }
@@ -145,15 +158,6 @@
     color: #ff5809;
   }
 
-  div.post-tabs {
-    margin-top: 16px;
-  }
-
-  ul.category {
-    list-style-type: none;
-    padding: 0px;
-
-  }
 
   ul.category li {
     display: inline;
@@ -169,20 +173,12 @@
     text-decoration: none;
   }
 
-  li .form {
-    float: right;
-  }
 
   ul.posts {
     list-style-type: none;
-    padding: 0px;
-    margin: 16px 0px 0px 0px;
+    padding: 0;
+    margin: 16px 0 0 0;
     border-top: 1px solid #e0e0e0;
-  }
-
-  div.post-tabs ul.posts {
-    margin: 0px;
-    border-top: none;
   }
 
   ul.posts li.post {
@@ -212,94 +208,10 @@
     font-weight: bold;
   }
 
-  div.post-thumbnail {
-    position: absolute;
-  }
-
-  div.post-footer {
-    text-align: right;
-  }
-
-  ul.comments {
-    list-style-type: none;
-    padding: 0px;
-    margin: 16px 0px 0px 0px;
-  }
-
-  ul.comments li.comment {
-    margin-left: 32px;
-    padding: 8px;
-    border-bottom: 1px solid #e0e0e0;
-  }
-
-  ul.comments li.comment:nth-child(1) {
-    border-top: 1px solid #e0e0e0;
-  }
-
-  ul.comments li.comment:hover {
-    background-color: #f0f0f0;
-  }
-
-  div.comment-date {
-    float: right;
-  }
-
-  div.comment-author {
-    font-weight: bold;
-  }
-
-  div.comment-thumbnail {
-    position: absolute;
-  }
-
-  div.comment-content {
-    margin-left: 48px;
-    min-height: 48px;
-  }
-
-  div.comment-form {
-    margin: 16px 0px 16px 32px;
-  }
-
   div.pagination {
     width: 100%;
     text-align: right;
     padding: 0px;
     margin: 0px;
   }
-
-  div.flask-pagedown-preview {
-    margin: 10px 0px 10px 0px;
-    border: 1px solid #e0e0e0;
-    padding: 4px;
-  }
-
-  div.flask-pagedown-preview h1 {
-    font-size: 140%;
-  }
-
-  div.flask-pagedown-preview h2 {
-    font-size: 130%;
-  }
-
-  div.flask-pagedown-preview h3 {
-    font-size: 120%;
-  }
-
-  .post-body h1 {
-    font-size: 140%;
-  }
-
-  .post-body h2 {
-    font-size: 130%;
-  }
-
-  .post-body h3 {
-    font-size: 120%;
-  }
-
-  .table.followers tr {
-    border-bottom: 1px solid #e0e0e0;
-  }
-
 </style>
