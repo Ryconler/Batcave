@@ -392,6 +392,20 @@ export default {
           reject(err)
         })
     })
+  },
+  /* 留言 */
+  postRecord({},record){
+    return new Promise((resolve,reject) => {
+      axios.post('/api/records/record',{content:record})
+        .then(res=>resolve(res))
+        .catch(err=>reject(err))
+    })
+  },
+  getRecords(){
+    return new Promise(resolve => {
+      axios.get('/api/records/home')
+        .then(res=>resolve(res.data.records))
+    })
   }
 
 }
