@@ -51,10 +51,10 @@
     </div>
     <transition name="fade">
       <div class="write-record" v-show="writeRecord">
+        <canvas class="bat" width="640" height="240" id="write-record">你的浏览器不支持canvas</canvas>
         <textarea cols="30" rows="3" v-model.trim="record" :placeholder="user?'将以【'+user.username+'】的身份留言':'将以【匿名】的身份留言'"></textarea>
         <a href="#records" @click="postRecord">留言</a>
         <span @click="writeRecord = false">&times;</span>
-        <canvas class="bat" width="640" height="240" id="write-record">你的浏览器不支持canvas</canvas>
       </div>
     </transition>
 
@@ -206,7 +206,7 @@
     position: relative;
     height: 60px;
     margin-bottom: 10px;
-    opacity: 0.3;
+    opacity: 0.8;
   }
 
   .side-bar .side-item:hover {
@@ -260,7 +260,6 @@
     border-radius: 6px;
     outline: none;
     resize: none;
-    z-index: 10;
   }
 
   .write-record textarea:focus {
@@ -280,7 +279,6 @@
     left: 280px;
     background: #666;
     color: #fff;
-    z-index: 10;
   }
 
   .write-record a:hover {
@@ -289,16 +287,16 @@
 
   .write-record span{
     position: absolute;
-    right: 0;
-    top: 0;
-    margin-right: -10px;
+    bottom: 0;
+    left: 307px;
+    margin-bottom: -10px;
     background: indianred;
     color: #fff;
     font-weight: bold;
     font-size: 20px;
-    width: 25px;
-    height: 25px;
-    line-height: 25px;
+    width: 26px;
+    height: 26px;
+    line-height: 26px;
     text-align: center;
     border-radius: 50% ;
   }
@@ -336,6 +334,7 @@
       left: 8rem;
       border: 0.2rem solid #666;
       border-radius: 0.3rem;
+      font-size: 12px;
     }
 
     .write-record a {
@@ -345,16 +344,18 @@
       border-radius: 0.4rem;
       bottom: 3.75rem;
       left: 14rem;
+      font-size: 12px;
     }
 
     .write-record span{
-      right: 0;
-      top: 0;
-      margin-right: -0.5rem;
-      font-size: 1rem;
-      width: 1.25rem;
-      height: 1.25rem;
-      line-height: 1.25rem;
+      bottom: 0;
+      left: 15.35rem;
+      margin-bottom: -0.5rem;
+      font-size: 16px;
+      width: 1.3rem;
+      height: 1.3rem;
+      line-height: 1.3rem;
+      text-align: center;
       border-radius: 50% ;
     }
   }
