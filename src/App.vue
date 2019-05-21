@@ -15,13 +15,13 @@
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li :class="{select: homeSelect}">
-              <router-link to="/">首页</router-link>
+              <router-link to="/" onclick="waTag('event','导航栏','点击','首页')">首页</router-link>
             </li>
             <li :class="{select: urlSelect}">
-              <router-link to="/urls">链接资源</router-link>
+              <router-link to="/urls" onclick="waTag('event','导航栏','点击','链接资源')">链接资源</router-link>
             </li>
             <li :class="{select: fileSelect}">
-              <router-link to="/files">文件资源</router-link>
+              <router-link to="/files" onclick="waTag('event','导航栏','点击','文件资源')">文件资源</router-link>
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
@@ -52,10 +52,10 @@
               </ul>
             </li>
             <li v-if="!user" :class="{select: login}">
-              <router-link to="/login">登录</router-link>
+              <router-link to="/login" onclick="waTag('event','导航栏','点击','登录')">登录</router-link>
             </li>
             <li v-if="!user" :class="{select: register}">
-              <router-link to="/register">注册</router-link>
+              <router-link to="/register" onclick="waTag('event','导航栏','点击','注册')">注册</router-link>
             </li>
           </ul>
         </div>

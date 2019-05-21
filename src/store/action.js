@@ -240,6 +240,7 @@ export default {
   register({commit}, registerInfo) {
     axios.post('/api/register', registerInfo)
       .then(res => {
+        waTag('conversion', '注册转化', '注册成功', 4);
         commit('setUser', res.data.user)
         commit('clearErrMsg')
         setCookie('username', registerInfo.username)
