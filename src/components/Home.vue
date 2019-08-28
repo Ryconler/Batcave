@@ -45,7 +45,7 @@
     </ul>
     <br>
     <div class="side-bar">
-      <div class="side-item" @click.stop="writeRecord = !writeRecord" onclick="waTag('event','按钮','点击','写留言')">
+      <div class="side-item" @click.stop="writeRecord = !writeRecord">
         <canvas class="bat" width="160" height="60" id="write-record-icon">你的浏览器不支持canvas</canvas>
       </div>
     </div>
@@ -178,7 +178,6 @@
       }
     },
     mounted() {
-      waTag('conversion', '注册转化', '首页', 1);
       this.$store.commit('selectHome')
       this.getURLs()
       this.getFiles()

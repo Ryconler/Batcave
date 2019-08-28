@@ -129,7 +129,6 @@
         [this.username,this.email,this.password,this.rePassword] = ['','','','','']
       },
       submit() {
-        waTag('conversion', '注册转化', '注册表单提交', 3);
         let a = this.validateUsr(this.username)
         let b = this.validateEml(this.email)
         let c = this.validatePsw(this.password)
@@ -146,7 +145,6 @@
     },
     mounted(){
       this.$store.commit('selecRegister')
-      waTag('conversion', '注册转化', '注册页', 2);
     },
     watch: { // 字段trim后发生改变了并触发了blur事件（lazy），进行一次验证
       username(val) {
