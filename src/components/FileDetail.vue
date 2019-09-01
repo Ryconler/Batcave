@@ -41,7 +41,7 @@
           .catch(err=> {})
       },
       download(){
-        window.open(config.baseURL + this.file.location)
+        window.open(config.baseURL + '/' +this.file.location)
       }
     },
     mounted() {
