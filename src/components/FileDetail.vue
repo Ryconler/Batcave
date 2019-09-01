@@ -25,6 +25,7 @@
 </template>
 
 <script>
+  import config from '../config'
   export default {
     name: "FileDetail",
     data() {
@@ -40,11 +41,7 @@
           .catch(err=> {})
       },
       download(){
-        if (process.env.NODE_ENV === 'development') {
-          window.open('http://localhost:5000/' + this.file.location)
-        }else {
-          window.open('http://batcave.server.jessezhu.cn/' + this.file.location)
-        }
+        window.open(config.baseURL + this.file.location)
       }
     },
     mounted() {
