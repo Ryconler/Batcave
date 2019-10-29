@@ -25,12 +25,12 @@ const router = new Router({
     },
     {
       path: '/login',
-      name:'login',
+      name: 'login',
       component: Login
     },
     {
       path: '/register',
-      name:'register',
+      name: 'register',
       component: Register
     },
     {
@@ -98,7 +98,7 @@ const router = new Router({
 })
 router.beforeEach((to, from, next) => {
   const isLogin = localStorage.getItem('login')
-  if (isLogin==='yes') { // 之前有存储过从后端传过来的token
+  if (isLogin === 'yes') { // 之前有存储过从后端传过来的token
     if (['login', 'register'].indexOf(to.name) >= 0) { // 已经登录了耍心机还想去登录
       next('/') // 不允许
     } else {

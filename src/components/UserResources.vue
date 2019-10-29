@@ -46,80 +46,80 @@
 </template>
 
 <script>
-  import Pagination from "./reusable/Pagination";
-  import {mapState} from 'vuex'
+import Pagination from './reusable/Pagination'
+import {mapState} from 'vuex'
 
-  export default {
-    name: "UserResources",
-    components: {Pagination},
-    computed: mapState([
-      'myLikeURLIds',
-      'myLikeFileIds'
-    ]),
-    data() {
-      return {
-        id: 0,
-        urls: [],
-        urlCount: 0,
-        urlPage: 1,
-        files: [],
-        fileCount: 0,
-        filePage: 1
-      }
+export default {
+  name: 'UserResources',
+  components: {Pagination},
+  computed: mapState([
+    'myLikeURLIds',
+    'myLikeFileIds'
+  ]),
+  data () {
+    return {
+      id: 0,
+      urls: [],
+      urlCount: 0,
+      urlPage: 1,
+      files: [],
+      fileCount: 0,
+      filePage: 1
+    }
+  },
+  methods: {
+    unlikeURL (rid) {
+      this.$store.dispatch('unlikeURL', rid)
     },
-    methods: {
-      unlikeURL(rid) {
-        this.$store.dispatch('unlikeURL', rid)
-      },
-      likeURL(rid) {
-        this.$store.dispatch('likeURL', rid)
-      },
-      unlikeFile(fid) {
-        this.$store.dispatch('unlikeFile', fid)
-      },
-      likeFile(fid) {
-        this.$store.dispatch('likeFile', fid)
-      },
-      setURLPage(page) {
-        this.urlPage = page
-      },
-      setFilePage(page) {
-        this.filePage = page
-      },
-      getURLCount() {
-        this.$store.dispatch('getOtherURLsCount', this.id)
-          .then(res => this.urlCount = res)
-      },
-      getFileCount() {
-        this.$store.dispatch('getOtherPublicFilesCount', this.id)
-          .then(res => this.fileCount = res)
-      },
-      getURLs() {
-        this.$store.dispatch('getOtherURLs', {uid: this.id, page: this.urlPage})
-          .then(res => this.urls = res)
-      },
-      getFiles() {
-        this.$store.dispatch('getOtherPublicFiles', {uid: this.id, page: this.filePage})
-          .then(res => this.files = res)
-      }
+    likeURL (rid) {
+      this.$store.dispatch('likeURL', rid)
     },
-    mounted() {
-      this.id = this.$route.params.id
-      this.$store.commit('selectNone')
+    unlikeFile (fid) {
+      this.$store.dispatch('unlikeFile', fid)
+    },
+    likeFile (fid) {
+      this.$store.dispatch('likeFile', fid)
+    },
+    setURLPage (page) {
+      this.urlPage = page
+    },
+    setFilePage (page) {
+      this.filePage = page
+    },
+    getURLCount () {
+      this.$store.dispatch('getOtherURLsCount', this.id)
+        .then(res => this.urlCount = res)
+    },
+    getFileCount () {
+      this.$store.dispatch('getOtherPublicFilesCount', this.id)
+        .then(res => this.fileCount = res)
+    },
+    getURLs () {
+      this.$store.dispatch('getOtherURLs', {uid: this.id, page: this.urlPage})
+        .then(res => this.urls = res)
+    },
+    getFiles () {
+      this.$store.dispatch('getOtherPublicFiles', {uid: this.id, page: this.filePage})
+        .then(res => this.files = res)
+    }
+  },
+  mounted () {
+    this.id = this.$route.params.id
+    this.$store.commit('selectNone')
+    this.getURLs()
+    this.getFiles()
+    this.getFileCount()
+    this.getURLCount()
+  },
+  watch: {
+    urlPage () {
       this.getURLs()
-      this.getFiles()
-      this.getFileCount()
-      this.getURLCount()
     },
-    watch: {
-      urlPage() {
-        this.getURLs()
-      },
-      filePage() {
-        this.getFiles()
-      }
+    filePage () {
+      this.getFiles()
     }
   }
+}
 </script>
 
 <style scoped>

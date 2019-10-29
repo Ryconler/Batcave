@@ -32,62 +32,62 @@
 </template>
 
 <script>
-  import Pagination from "./reusable/Pagination";
-  import { mapState } from 'vuex'
-  export default {
-    name: "MyFiles",
-    components: {Pagination},
-    computed: mapState([
-      'myLikeFileIds'
-    ]),
-    data() {
-      return {
-        files: [
-          {id:0,owner: {id:0}},
-          {id:1,owner: {id:1}},
-          {id:2,owner: {id:2}},
-          {id:3,owner: {id:3}},
-          {id:4,owner: {id:4}},
-          {id:5,owner: {id:5}},
-          {id:6,owner: {id:6}},
-          {id:7,owner: {id:7}},
-          {id:8,owner: {id:8}},
-          {id:9,owner: {id:9}},
-        ],
-        fileCount: 0,
-        page: 1
-      }
+import Pagination from './reusable/Pagination'
+import { mapState } from 'vuex'
+export default {
+  name: 'MyFiles',
+  components: {Pagination},
+  computed: mapState([
+    'myLikeFileIds'
+  ]),
+  data () {
+    return {
+      files: [
+        {id: 0, owner: {id: 0}},
+        {id: 1, owner: {id: 1}},
+        {id: 2, owner: {id: 2}},
+        {id: 3, owner: {id: 3}},
+        {id: 4, owner: {id: 4}},
+        {id: 5, owner: {id: 5}},
+        {id: 6, owner: {id: 6}},
+        {id: 7, owner: {id: 7}},
+        {id: 8, owner: {id: 8}},
+        {id: 9, owner: {id: 9}}
+      ],
+      fileCount: 0,
+      page: 1
+    }
+  },
+  methods: {
+    setPage (page) {
+      this.page = page
     },
-    methods:{
-      setPage(page){
-        this.page = page
-      },
-      unlikeFile(fid) {
-        this.$store.dispatch('unlikeFile', fid)
-      },
-      likeFile(fid) {
-        this.$store.dispatch('likeFile', fid)
-      },
-      getFiles() {
-        this.$store.dispatch('getFiles',this.page)
-          .then(res => this.files = res)
-      },
-      getCount() {
-        this.$store.dispatch('getFilesCount')
-          .then(res=> this.fileCount = res)
-      }
+    unlikeFile (fid) {
+      this.$store.dispatch('unlikeFile', fid)
     },
-    mounted() {
-      this.$store.commit('selectFile')
+    likeFile (fid) {
+      this.$store.dispatch('likeFile', fid)
+    },
+    getFiles () {
+      this.$store.dispatch('getFiles', this.page)
+        .then(res => this.files = res)
+    },
+    getCount () {
+      this.$store.dispatch('getFilesCount')
+        .then(res => this.fileCount = res)
+    }
+  },
+  mounted () {
+    this.$store.commit('selectFile')
+    this.getFiles()
+    this.getCount()
+  },
+  watch: {
+    page () {
       this.getFiles()
-      this.getCount()
-    },
-    watch:{
-      page(){
-        this.getFiles()
-      }
     }
   }
+}
 </script>
 
 <style scoped>

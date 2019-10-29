@@ -1,6 +1,4 @@
 /build/
 /config/
 /dist/
-*.js
-*.vue
 /test/unit/coverage/

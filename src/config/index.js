@@ -1,4 +1,4 @@
-const devFlag = process.env.NODE_ENV === 'development';
+const devFlag = process.env.NODE_ENV === 'development'
 
 export default {
   devFlag,

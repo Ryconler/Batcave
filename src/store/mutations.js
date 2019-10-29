@@ -1,5 +1,5 @@
 export default {
-  selectNone(state) {
+  selectNone (state) {
     state.homeSelect = false
     state.urlSelect = false
     state.fileSelect = false
@@ -10,7 +10,7 @@ export default {
     state.login = false
     state.register = false
   },
-  selectHome(state) {
+  selectHome (state) {
     state.homeSelect = true
     state.urlSelect = false
     state.fileSelect = false
@@ -21,7 +21,7 @@ export default {
     state.login = false
     state.register = false
   },
-  selectURL(state) {
+  selectURL (state) {
     state.homeSelect = false
     state.urlSelect = true
     state.fileSelect = false
@@ -32,7 +32,7 @@ export default {
     state.login = false
     state.register = false
   },
-  selectFile(state) {
+  selectFile (state) {
     state.homeSelect = false
     state.urlSelect = false
     state.fileSelect = true
@@ -43,7 +43,7 @@ export default {
     state.login = false
     state.register = false
   },
-  selectMyLike(state) {
+  selectMyLike (state) {
     state.homeSelect = false
     state.urlSelect = false
     state.fileSelect = false
@@ -54,7 +54,7 @@ export default {
     state.login = false
     state.register = false
   },
-  selectMyURL(state) {
+  selectMyURL (state) {
     state.homeSelect = false
     state.urlSelect = false
     state.fileSelect = false
@@ -65,7 +65,7 @@ export default {
     state.login = false
     state.register = false
   },
-  selectMyFile(state) {
+  selectMyFile (state) {
     state.homeSelect = false
     state.urlSelect = false
     state.fileSelect = false
@@ -76,7 +76,7 @@ export default {
     state.login = false
     state.register = false
   },
-  selectChangePsw(state) {
+  selectChangePsw (state) {
     state.homeSelect = false
     state.urlSelect = false
     state.fileSelect = false
@@ -87,7 +87,7 @@ export default {
     state.login = false
     state.register = false
   },
-  selecLogin(state) {
+  selecLogin (state) {
     state.homeSelect = false
     state.urlSelect = false
     state.fileSelect = false
@@ -98,7 +98,7 @@ export default {
     state.login = true
     state.register = false
   },
-  selecRegister(state) {
+  selecRegister (state) {
     state.homeSelect = false
     state.urlSelect = false
     state.fileSelect = false
@@ -110,33 +110,32 @@ export default {
     state.register = true
   },
 
-
-  setUser(state, user) {
+  setUser (state, user) {
     state.user = user
   },
-  addErrMsg(state, msg) {
+  addErrMsg (state, msg) {
     state.errorMessages.push(msg)
   },
-  clearErrMsg(state) {
+  clearErrMsg (state) {
     state.errorMessages = []
   },
 
-  setMyLikeURLIds(state, ids) {
+  setMyLikeURLIds (state, ids) {
     state.myLikeURLIds = ids
   },
-  pushMyLikeURLIds(state, id) {
+  pushMyLikeURLIds (state, id) {
     state.myLikeURLIds.push(id)
   },
-  clearMyLikeURLIds(state) {
+  clearMyLikeURLIds (state) {
     state.myLikeURLIds = []
   },
-  setMyLikeFileIds(state, ids) {
+  setMyLikeFileIds (state, ids) {
     state.myLikeFileIds = ids
   },
-  pushMyLikeFileIds(state, id) {
+  pushMyLikeFileIds (state, id) {
     state.myLikeFileIds.push(id)
   },
-  clearMyLikFileIds(state) {
+  clearMyLikFileIds (state) {
     state.myLikeFileIds = []
   }
 

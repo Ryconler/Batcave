@@ -34,63 +34,63 @@
 </template>
 
 <script>
-  import Pagination from "./reusable/Pagination";
-  import {mapState} from 'vuex'
+import Pagination from './reusable/Pagination'
+import {mapState} from 'vuex'
 
-  export default {
-    name: "URLs",
-    components: {Pagination},
-    computed: mapState([
-      'myLikeURLIds'
-    ]),
-    data() {
-      return {
-        urls: [
-          {id: 0, owner: {id: 0}},
-          {id: 1, owner: {id: 1}},
-          {id: 2, owner: {id: 2}},
-          {id: 3, owner: {id: 3}},
-          {id: 4, owner: {id: 4}},
-          {id: 5, owner: {id: 5}},
-          {id: 6, owner: {id: 6}},
-          {id: 7, owner: {id: 7}},
-          {id: 8, owner: {id: 8}},
-          {id: 9, owner: {id: 9}},
-        ],
-        urlCount: 0,
-        page: 1
-      }
+export default {
+  name: 'URLs',
+  components: {Pagination},
+  computed: mapState([
+    'myLikeURLIds'
+  ]),
+  data () {
+    return {
+      urls: [
+        {id: 0, owner: {id: 0}},
+        {id: 1, owner: {id: 1}},
+        {id: 2, owner: {id: 2}},
+        {id: 3, owner: {id: 3}},
+        {id: 4, owner: {id: 4}},
+        {id: 5, owner: {id: 5}},
+        {id: 6, owner: {id: 6}},
+        {id: 7, owner: {id: 7}},
+        {id: 8, owner: {id: 8}},
+        {id: 9, owner: {id: 9}}
+      ],
+      urlCount: 0,
+      page: 1
+    }
+  },
+  methods: {
+    setPage (page) {
+      this.page = page
     },
-    methods: {
-      setPage(page) {
-        this.page = page
-      },
-      unlikeURL(rid) {
-        this.$store.dispatch('unlikeURL', rid)
-      },
-      likeURL(rid) {
-        this.$store.dispatch('likeURL', rid)
-      },
-      getURLs() {
-        this.$store.dispatch('getURLs',this.page)
-          .then(res => this.urls = res)
-      },
-      getCount() {
-        this.$store.dispatch('getURLsCount')
-          .then(res=> this.urlCount = res)
-      }
+    unlikeURL (rid) {
+      this.$store.dispatch('unlikeURL', rid)
     },
-    mounted() {
-      this.$store.commit('selectURL')
+    likeURL (rid) {
+      this.$store.dispatch('likeURL', rid)
+    },
+    getURLs () {
+      this.$store.dispatch('getURLs', this.page)
+        .then(res => this.urls = res)
+    },
+    getCount () {
+      this.$store.dispatch('getURLsCount')
+        .then(res => this.urlCount = res)
+    }
+  },
+  mounted () {
+    this.$store.commit('selectURL')
+    this.getURLs()
+    this.getCount()
+  },
+  watch: {
+    page () {
       this.getURLs()
-      this.getCount()
-    },
-    watch: {
-      page() {
-        this.getURLs()
-      }
     }
   }
+}
 </script>
 
 <style scoped>

@@ -51,84 +51,83 @@
 </template>
 
 <script>
-  import Pagination from "./reusable/Pagination";
-  import {mapState} from 'vuex'
+import Pagination from './reusable/Pagination'
+import {mapState} from 'vuex'
 
-  export default {
-    name: "MyLikes",
-    components: {Pagination},
-    computed: mapState([
-      'myLikeURLIds',
-      'myLikeFileIds'
-    ]),
-    data() {
-      return {
-        urls: [],
-        urlPage: 1,
-        urlCount: 0,
-        files: [],
-        filePage: 1,
-        fileCount: 0
-      }
+export default {
+  name: 'MyLikes',
+  components: {Pagination},
+  computed: mapState([
+    'myLikeURLIds',
+    'myLikeFileIds'
+  ]),
+  data () {
+    return {
+      urls: [],
+      urlPage: 1,
+      urlCount: 0,
+      files: [],
+      filePage: 1,
+      fileCount: 0
+    }
+  },
+  methods: {
+    unlikeURL (rid) {
+      this.$store.dispatch('unlikeURL', rid)
     },
-    methods: {
-      unlikeURL(rid) {
-        this.$store.dispatch('unlikeURL', rid)
-      },
-      likeURL(rid) {
-        this.$store.dispatch('likeURL', rid)
-      },
-      unlikeFile(fid) {
-        this.$store.dispatch('unlikeFile', fid)
-      },
-      likeFile(fid) {
-        this.$store.dispatch('likeFile', fid)
-      },
-      setURLPage(page) {
-        this.urlPage = page
-      },
-      getURLCount() {
-        this.urlCount = this.$store.state.myLikeURLIds.length
-      },
-      getURLs() {
-        this.$store.dispatch('getMyLikeURLs', this.urlPage)
-          .then(res => {
-            this.urls = res
-            if(this.urls.length===0 && this.urlPage!==1){
-              this.urlPage = 1
-            }
-          })
-      },
-      setFilePage(page) {
-        this.filePage = page
-      },
-      getFileCount() {
-        this.fileCount = this.$store.state.myLikeFileIds.length
-      },
-      getFiles() {
-        this.$store.dispatch('getMyLikeFiles', this.filePage)
-          .then(res => this.files = res)
-      },
+    likeURL (rid) {
+      this.$store.dispatch('likeURL', rid)
     },
-    mounted() {
-      this.$store.commit('selectMyLike')
+    unlikeFile (fid) {
+      this.$store.dispatch('unlikeFile', fid)
+    },
+    likeFile (fid) {
+      this.$store.dispatch('likeFile', fid)
+    },
+    setURLPage (page) {
+      this.urlPage = page
+    },
+    getURLCount () {
+      this.urlCount = this.$store.state.myLikeURLIds.length
+    },
+    getURLs () {
+      this.$store.dispatch('getMyLikeURLs', this.urlPage)
+        .then(res => {
+          this.urls = res
+          if (this.urls.length === 0 && this.urlPage !== 1) {
+            this.urlPage = 1
+          }
+        })
+    },
+    setFilePage (page) {
+      this.filePage = page
+    },
+    getFileCount () {
+      this.fileCount = this.$store.state.myLikeFileIds.length
+    },
+    getFiles () {
+      this.$store.dispatch('getMyLikeFiles', this.filePage)
+        .then(res => this.files = res)
+    }
+  },
+  mounted () {
+    this.$store.commit('selectMyLike')
+    this.getURLs()
+    this.getFiles()
+    this.getURLCount()
+    this.getFileCount()
+  },
+  watch: {
+    urlPage () {
       this.getURLs()
-      this.getFiles()
       this.getURLCount()
-      this.getFileCount()
     },
-    watch: {
-      urlPage() {
-        this.getURLs()
-        this.getURLCount()
-      },
-      filePage() {
-        this.getFiles()
-        this.getFileCount()
-
-      }
+    filePage () {
+      this.getFiles()
+      this.getFileCount()
     }
   }
+}
 </script>
 
 <style scoped>

@@ -46,122 +46,122 @@
 </template>
 
 <script>
-  export default {
-    name: "Register",
-    data() {
-      return {
-        username: '',
-        usrRight: false,
-        usrWrong: false,
-        email: '',
-        emlRight: false,
-        emlWrong: false,
-        password: '',
-        pswRight: false,
-        pswWrong: false,
-        rePassword: '',
-        repRight: false,
-        repWrong: false,
-        isAgree: false,
+export default {
+  name: 'Register',
+  data () {
+    return {
+      username: '',
+      usrRight: false,
+      usrWrong: false,
+      email: '',
+      emlRight: false,
+      emlWrong: false,
+      password: '',
+      pswRight: false,
+      pswWrong: false,
+      rePassword: '',
+      repRight: false,
+      repWrong: false,
+      isAgree: false
+    }
+  },
+  methods: {
+    validateUsr (val) {
+      if (val.length < 3 || val.length > 10) {
+        this.usrRight = false
+        this.usrWrong = true
+        return false
+      } else if (val.indexOf(' ') >= 0) {
+        this.usrRight = false
+        this.usrWrong = true
+        return false
+      } else {
+        this.usrRight = true
+        this.usrWrong = false
+        return true
       }
     },
-    methods: {
-      validateUsr(val) {
-        if (val.length < 3 || val.length > 10) {
-          this.usrRight = false
-          this.usrWrong = true
-          return false
-        } else if (val.indexOf(' ') >= 0) {
-          this.usrRight = false
-          this.usrWrong = true
-          return false
-        } else {
-          this.usrRight = true
-          this.usrWrong = false
-          return true
-        }
-      },
-      validateEml(val) {
-        // 邮箱格式
-        const reg = new RegExp('^[a-zA-Z0-9][\\w\\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]$')
-        if (val.length === 0) {
-          this.emlRight = false
-          this.emlWrong = true
-          return false
-        } else if (!reg.test(val)) {
-          this.emlRight = false
-          this.emlWrong = true
-          return false
-        } else {
-          this.emlRight = true
-          this.emlWrong = false
-          return true
-        }
-      },
-      validatePsw(val) {
-        const reg = /^[\x20-\x7E]*$/ // 包含所有ASCII字符（含空格）
-        if (val.length < 6 || val.length > 16) {
-          this.pswRight = false
-          this.pswWrong = true
-          return false
-        } else if (!reg.test(val)) {
-          this.pswRight = false
-          this.pswWrong = true
-          return false
-        } else {
-          this.pswRight = true
-          this.pswWrong = false
-          return true
-        }
-      },
-      validateRep(val) {
-        if (val === this.password) {
-          this.repRight = true
-          this.repWrong = false
-          return true
-        } else {
-          this.repRight = false
-          this.repWrong = true
-          return false
-        }
-      },
-      reset(){
-        [this.username,this.email,this.password,this.rePassword] = ['','','','','']
-      },
-      submit() {
-        let a = this.validateUsr(this.username)
-        let b = this.validateEml(this.email)
-        let c = this.validatePsw(this.password)
-        let d = this.validateRep(this.rePassword)
-        if (a && b && c && d && this.isAgree) {
-          const registerInfo = {
-            username: this.username,
-            email: this.email,
-            password: this.password,
-          }
-          this.$store.dispatch('register',registerInfo)
-        }
+    validateEml (val) {
+      // 邮箱格式
+      const reg = new RegExp('^[a-zA-Z0-9][\\w\\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]$')
+      if (val.length === 0) {
+        this.emlRight = false
+        this.emlWrong = true
+        return false
+      } else if (!reg.test(val)) {
+        this.emlRight = false
+        this.emlWrong = true
+        return false
+      } else {
+        this.emlRight = true
+        this.emlWrong = false
+        return true
       }
     },
-    mounted(){
-      this.$store.commit('selecRegister')
+    validatePsw (val) {
+      const reg = /^[\x20-\x7E]*$/ // 包含所有ASCII字符（含空格）
+      if (val.length < 6 || val.length > 16) {
+        this.pswRight = false
+        this.pswWrong = true
+        return false
+      } else if (!reg.test(val)) {
+        this.pswRight = false
+        this.pswWrong = true
+        return false
+      } else {
+        this.pswRight = true
+        this.pswWrong = false
+        return true
+      }
     },
-    watch: { // 字段trim后发生改变了并触发了blur事件（lazy），进行一次验证
-      username(val) {
-        this.validateUsr(val)
-      },
-      email(val) {
-        this.validateEml(val)
-      },
-      password(val) {
-        this.validatePsw(val)
-        this.validateRep(this.rePassword)
-      },
-      rePassword(val) {
-        this.validateRep(val)
+    validateRep (val) {
+      if (val === this.password) {
+        this.repRight = true
+        this.repWrong = false
+        return true
+      } else {
+        this.repRight = false
+        this.repWrong = true
+        return false
+      }
+    },
+    reset () {
+      [this.username, this.email, this.password, this.rePassword] = ['', '', '', '', '']
+    },
+    submit () {
+      let a = this.validateUsr(this.username)
+      let b = this.validateEml(this.email)
+      let c = this.validatePsw(this.password)
+      let d = this.validateRep(this.rePassword)
+      if (a && b && c && d && this.isAgree) {
+        const registerInfo = {
+          username: this.username,
+          email: this.email,
+          password: this.password
+        }
+        this.$store.dispatch('register', registerInfo)
       }
     }
+  },
+  mounted () {
+    this.$store.commit('selecRegister')
+  },
+  watch: { // 字段trim后发生改变了并触发了blur事件（lazy），进行一次验证
+    username (val) {
+      this.validateUsr(val)
+    },
+    email (val) {
+      this.validateEml(val)
+    },
+    password (val) {
+      this.validatePsw(val)
+      this.validateRep(this.rePassword)
+    },
+    rePassword (val) {
+      this.validateRep(val)
+    }
   }
+}
 </script>
 
 <style scoped>

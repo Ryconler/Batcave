@@ -1,11 +1,10 @@
 import axios from 'axios'
-import router from "../router";
-import config from "../config";
+import router from '../router'
+import config from '../config'
 
 axios.defaults.withCredentials = true
 
-
-axios.defaults.baseURL = config.baseURL;
+axios.defaults.baseURL = config.baseURL
 axios.interceptors.request.use(function (config) {
   return config
 }, function (error) {
@@ -38,13 +37,13 @@ axiosForm.interceptors.response.use(function (response) {
 })
 
 /* cookie */
-function setCookie(key, value) {
-  let date = new Date(); //获取当前时间
-  date.setTime(date.getTime() + 7 * 24 * 3600 * 1000); //格式化为cookie识别的时间
-  document.cookie = key + "=" + encodeURI(value) + ";expires=" + date.toUTCString();  //设置cookie
+function setCookie (key, value) {
+  let date = new Date() // 获取当前时间
+  date.setTime(date.getTime() + 7 * 24 * 3600 * 1000) // 格式化为cookie识别的时间
+  document.cookie = key + '=' + encodeURI(value) + ';expires=' + date.toUTCString() // 设置cookie
 }
 
-function getCookie(key) {
+function getCookie (key) {
   let cookies = document.cookie.split(';')
   for (let cookie of cookies) {
     let c = cookie.trim()
@@ -54,20 +53,20 @@ function getCookie(key) {
   }
 }
 
-function delCookie(key) {
-  let date = new Date(); //获取当前时间
-  date.setTime(date.getTime() - 10000); //将date设置为过去的时间
-  document.cookie = key + "=v; expires =" + date.toUTCString();//设置cookie
+function delCookie (key) {
+  let date = new Date() // 获取当前时间
+  date.setTime(date.getTime() - 10000) // 将date设置为过去的时间
+  document.cookie = key + '=v; expires =' + date.toUTCString()// 设置cookie
 }
 
 export default {
-  likeURL({state, commit}, rid) {
+  likeURL ({state, commit}, rid) {
     axios.post('/api/likes/like', {rid: rid})
       .then(res => {
         commit('pushMyLikeURLIds', rid)
       })
   },
-  unlikeURL({state, commit}, rid) {
+  unlikeURL ({state, commit}, rid) {
     axios.delete('/api/likes/unlike/url/' + rid)
       .then(res => {
         let myLikeURLIds = state.myLikeURLIds
@@ -78,22 +77,23 @@ export default {
         commit('setMyLikeURLIds', myLikeURLIds)
       })
   },
-  deleteURL({state},rid){
+  deleteURL ({state}, rid) {
     return new Promise(resolve => {
-      axios.delete('/api/urls/url/'+rid)
-        .then(res=>{
+      axios.delete('/api/urls/url/' + rid)
+        .then(res => {
           resolve(res.data.message)
         })
-        .catch(err=>{})
+        .catch(err => {
+        })
     })
   },
-  likeFile({state, commit}, fid) {
+  likeFile ({state, commit}, fid) {
     axios.post('/api/likes/like', {fid: fid})
       .then(res => {
         commit('pushMyLikeFileIds', fid)
       })
   },
-  unlikeFile({state, commit}, fid) {
+  unlikeFile ({state, commit}, fid) {
     axios.delete('/api/likes/unlike/file/' + fid)
       .then(res => {
         let myLikeFileIds = state.myLikeFileIds
@@ -104,17 +104,18 @@ export default {
         commit('setMyLikeFileIds', myLikeFileIds)
       })
   },
-  deleteFile({state},fid){
+  deleteFile ({state}, fid) {
     return new Promise(resolve => {
-      axios.delete('/api/files/file/'+fid)
-        .then(res=>{
+      axios.delete('/api/files/file/' + fid)
+        .then(res => {
           resolve(res.data.message)
         })
-        .catch(err=>{})
+        .catch(err => {
+        })
     })
   },
   /* 首页 */
-  getHomeURLs() {
+  getHomeURLs () {
     return new Promise((resolve, reject) => {
       axios.get('/api/urls/home')
         .then(res => {
@@ -122,7 +123,7 @@ export default {
         })
     })
   },
-  getHomeFiles() {
+  getHomeFiles () {
     return new Promise((resolve, reject) => {
       axios.get('/api/files/home')
         .then(res => {
@@ -131,7 +132,7 @@ export default {
     })
   },
   /* URLs页 */
-  getURLs({}, page) {
+  getURLs ({}, page) {
     return new Promise((resolve, reject) => {
       axios.get('/api/urls/limit?page=' + page)
         .then(res => {
@@ -139,7 +140,7 @@ export default {
         })
     })
   },
-  getURLsCount() {
+  getURLsCount () {
     return new Promise((resolve, reject) => {
       axios.get('/api/urls/count')
         .then(res => {
@@ -148,18 +149,18 @@ export default {
     })
   },
   /* Files页 */
-  getFile({},id){
+  getFile ({}, id) {
     return new Promise((resolve, reject) => {
       axios.get('/api/files/file/' + id)
         .then(res => {
           resolve(res.data.file)
         })
-        .catch(err=> {
+        .catch(err => {
           reject(err)
         })
     })
   },
-  getFiles({}, page) {
+  getFiles ({}, page) {
     return new Promise((resolve, reject) => {
       axios.get('/api/files/limit?page=' + page)
         .then(res => {
@@ -167,7 +168,7 @@ export default {
         })
     })
   },
-  getFilesCount() {
+  getFilesCount () {
     return new Promise((resolve, reject) => {
       axios.get('/api/files/count')
         .then(res => {
@@ -176,11 +177,11 @@ export default {
     })
   },
   /* 登录注册 */
-  checkLog({commit}) {
+  checkLog ({commit}) {
     axios.get('/api/checkLog')
       .then(res => {
-        if(res.data.user){
-          localStorage.setItem('login','yes')
+        if (res.data.user) {
+          localStorage.setItem('login', 'yes')
           commit('setUser', res.data.user)
           axios.get('/api/likes/urls/id')
             .then(res => {
@@ -190,18 +191,18 @@ export default {
             .then(res => {
               commit('setMyLikeFileIds', res.data.likes)
             })
-        }else{
-          localStorage.setItem('login','no')
+        } else {
+          localStorage.setItem('login', 'no')
           commit('setUser', null)
           delCookie('username')
           delCookie('password')
         }
       })
   },
-  logout({commit}) {
+  logout ({commit}) {
     delCookie('username')
     delCookie('password')
-    localStorage.setItem('login','no')
+    localStorage.setItem('login', 'no')
     commit('setUser', null)
     commit('clearMyLikeURLIds')
     commit('clearMyLikFileIds')
@@ -210,10 +211,10 @@ export default {
         router.push('/login')
       })
   },
-  login({commit}, loginInfo) {
+  login ({commit}, loginInfo) {
     axios.post('/api/login', loginInfo)
       .then(res => {
-        localStorage.setItem('login','yes')
+        localStorage.setItem('login', 'yes')
         commit('setUser', res.data.user)
         commit('clearErrMsg')
         setCookie('username', loginInfo.username)
@@ -232,17 +233,17 @@ export default {
         commit('addErrMsg', err.response.data.message)
       })
   },
-  sendTmpPsw({},username){
-    axios.post('/api/sendTmpPsw',{username})
+  sendTmpPsw ({}, username) {
+    axios.post('/api/sendTmpPsw', {username})
   },
-  register({commit}, registerInfo) {
+  register ({commit}, registerInfo) {
     axios.post('/api/register', registerInfo)
       .then(res => {
         commit('setUser', res.data.user)
         commit('clearErrMsg')
         setCookie('username', registerInfo.username)
         setCookie('password', registerInfo.password)
-        localStorage.setItem('login','yes')
+        localStorage.setItem('login', 'yes')
         router.replace('/')
         axios.get('/api/likes/urls/id')
           .then(res => {
@@ -257,13 +258,13 @@ export default {
         commit('addErrMsg', err.response.data.message)
       })
   },
-  changePassword({commit},password){
-    axios.put('/api/change-password',{newPassword:password})
-      .then(res=>{
+  changePassword ({commit}, password) {
+    axios.put('/api/change-password', {newPassword: password})
+      .then(res => {
         alert('更改成功')
         delCookie('username')
         delCookie('password')
-        localStorage.setItem('login','no')
+        localStorage.setItem('login', 'no')
         commit('setUser', null)
         commit('clearMyLikeURLIds')
         commit('clearMyLikFileIds')
@@ -274,7 +275,7 @@ export default {
       })
   },
   /* 我的喜欢 */
-  getMyLikeURLs({}, page) {
+  getMyLikeURLs ({}, page) {
     return new Promise(resolve => {
       axios.get('/api/likes/urls/limit?page=' + page)
         .then(res => {
@@ -282,7 +283,7 @@ export default {
         })
     })
   },
-  getMyLikeFiles({}, page) {
+  getMyLikeFiles ({}, page) {
     return new Promise(resolve => {
       axios.get('/api/likes/files/limit?page=' + page)
         .then(res => {
@@ -291,7 +292,7 @@ export default {
     })
   },
   /* 我的URL */
-  getMyURLs({}, page) {
+  getMyURLs ({}, page) {
     return new Promise(resolve => {
       axios.get('/api/urls/my/limit' + '?page=' + page)
         .then(res => {
@@ -299,7 +300,7 @@ export default {
         })
     })
   },
-  getMyURLsCount() {
+  getMyURLsCount () {
     return new Promise(resolve => {
       axios.get('/api/urls/my/count')
         .then(res => {
@@ -308,7 +309,7 @@ export default {
     })
   },
   /* 我的File */
-  getMyPublicFiles({}, page) {
+  getMyPublicFiles ({}, page) {
     return new Promise(resolve => {
       axios.get('/api/files/my/public/limit' + '?page=' + page)
         .then(res => {
@@ -316,7 +317,7 @@ export default {
         })
     })
   },
-  getMyPublicFilesCount() {
+  getMyPublicFilesCount () {
     return new Promise(resolve => {
       axios.get('/api/files/my/public/count')
         .then(res => {
@@ -324,7 +325,7 @@ export default {
         })
     })
   },
-  getMyPrivateFiles({}, page) {
+  getMyPrivateFiles ({}, page) {
     return new Promise(resolve => {
       axios.get('/api/files/my/private/limit' + '?page=' + page)
         .then(res => {
@@ -332,7 +333,7 @@ export default {
         })
     })
   },
-  getMyPrivateFilesCount() {
+  getMyPrivateFilesCount () {
     return new Promise(resolve => {
       axios.get('/api/files/my/private/count')
         .then(res => {
@@ -341,7 +342,7 @@ export default {
     })
   },
   /* 其他人的 */
-  getOtherURLs({}, {uid, page}) {
+  getOtherURLs ({}, {uid, page}) {
     return new Promise(resolve => {
       axios.get('/api/urls/other/limit/' + uid + '?page=' + page)
         .then(res => {
@@ -349,7 +350,7 @@ export default {
         })
     })
   },
-  getOtherURLsCount({}, uid) {
+  getOtherURLsCount ({}, uid) {
     return new Promise(resolve => {
       axios.get('/api/urls/other/count/' + uid)
         .then(res => {
@@ -357,7 +358,7 @@ export default {
         })
     })
   },
-  getOtherPublicFiles({}, {uid, page}) {
+  getOtherPublicFiles ({}, {uid, page}) {
     return new Promise(resolve => {
       axios.get('/api/files/other/public/limit/' + uid + '?page=' + page)
         .then(res => {
@@ -365,7 +366,7 @@ export default {
         })
     })
   },
-  getOtherPublicFilesCount({}, uid) {
+  getOtherPublicFilesCount ({}, uid) {
     return new Promise(resolve => {
       axios.get('/api/files/other/public/count/' + uid)
         .then(res => {
@@ -374,14 +375,14 @@ export default {
     })
   },
   /* 分享上传 */
-  share({},url){
+  share ({}, url) {
     axios.post('/api/urls/url', url)
-      .then(res=>{
+      .then(res => {
         router.push('/my/urls')
       })
   },
-  upload({},formData){
-    return new Promise((resolve, reject)=>{
+  upload ({}, formData) {
+    return new Promise((resolve, reject) => {
       axiosForm.post('/api/files/file', formData)
         .then(res => {
           resolve(res.data.message)
@@ -392,17 +393,17 @@ export default {
     })
   },
   /* 留言 */
-  postRecord({},record){
-    return new Promise((resolve,reject) => {
-      axios.post('/api/records/record',{content:record})
-        .then(res=>resolve(res))
-        .catch(err=>reject(err))
+  postRecord ({}, record) {
+    return new Promise((resolve, reject) => {
+      axios.post('/api/records/record', {content: record})
+        .then(res => resolve(res))
+        .catch(err => reject(err))
     })
   },
-  getRecords(){
+  getRecords () {
     return new Promise(resolve => {
       axios.get('/api/records/home')
-        .then(res=>resolve(res.data.records))
+        .then(res => resolve(res.data.records))
     })
   }
 

@@ -62,131 +62,130 @@
 </template>
 
 <script>
-  import Pagination from "./reusable/Pagination";
+import Pagination from './reusable/Pagination'
 
-  export default {
-    name: 'Home',
-    components: {Pagination},
-    data() {
-      return {
-        urls: [
-          {id: 0, owner: {id: 0}},
-          {id: 1, owner: {id: 1}},
-          {id: 2, owner: {id: 2}},
-          {id: 3, owner: {id: 3}},
-          {id: 4, owner: {id: 4}},
-        ],
-        files: [
-          {id: 0, owner: {id: 0}},
-          {id: 1, owner: {id: 1}},
-          {id: 2, owner: {id: 2}},
-          {id: 3, owner: {id: 3}},
-          {id: 4, owner: {id: 4}},
-        ],
-        record: '',
-        records: [
-          {id: 0},
-          {id: 1},
-          {id: 2},
-          {id: 3},
-          {id: 4},
-        ],
-        writeRecord: false
-      }
-    },
-    computed:{
-      user(){
-        return this.$store.state.user
-      }
-    },
-    methods: {
-      getURLs() {
-        this.$store.dispatch('getHomeURLs')
-          .then(res => {
-            this.urls = res
-          })
-      },
-      getFiles() {
-        this.$store.dispatch('getHomeFiles')
-          .then(res => {
-            this.files = res
-          })
-      },
-      getRecords(){
-        this.$store.dispatch('getRecords')
-          .then(res=>this.records = res)
-      },
-      postRecord(){
-        if(this.record){
-          this.$store.dispatch('postRecord',this.record)
-            .then(res=>{
-              this.record = ''
-              this.records.unshift(res.data.record)
-              if(this.records.length>5){
-                this.records.pop()
-              }
-              this.writeRecord = false
-            })
-            .catch(err=>alert('内部错误'))
-        }
-
-      },
-      drawBatIcon(canvas, font) {
-        let c = canvas.getContext('2d')
-        c.beginPath()
-        c.strokeStyle = '#333'
-        c.lineWidth = 2
-        c.moveTo(80, 5)
-        c.bezierCurveTo(80, 15, 102, 15, 102, 3)
-        c.lineTo(160, 3)
-        c.quadraticCurveTo(130, 5, 130, 40)
-        c.quadraticCurveTo(80, 40, 80, 60)
-        c.moveTo(80, 5)
-        c.bezierCurveTo(80, 15, 58, 15, 58, 3)
-        c.lineTo(0, 3)
-        c.quadraticCurveTo(30, 5, 30, 40)
-        c.quadraticCurveTo(80, 40, 80, 60)
-        c.fillStyle = '#fff'
-        c.fill()
-        c.stroke()
-        c.fillStyle = '#333'
-        c.font = 'normal small-caps 300 14px arial'
-        c.textAlign = 'left'
-        c.textBaseline = 'middle'
-        c.fillText(font, 83, 30)
-        c.closePath()
-      },
-      drawBat(canvas) {
-        let c = canvas.getContext('2d')
-        c.beginPath()
-        c.strokeStyle = '#333'
-        c.lineWidth = 8
-        c.moveTo(320, 20)
-        c.bezierCurveTo(320, 60, 408, 60, 408, 12)
-        c.lineTo(640, 12)
-        c.quadraticCurveTo(520, 20, 520, 160)
-        c.quadraticCurveTo(320, 160, 320, 240)
-        c.moveTo(320, 20)
-        c.bezierCurveTo(320, 60, 232, 60, 232, 12)
-        c.lineTo(0, 12)
-        c.quadraticCurveTo(120, 20, 120, 160)
-        c.quadraticCurveTo(320, 160, 320, 240)
-        c.fillStyle = '#fff'
-        c.fill()
-        c.stroke()
-        c.closePath()
-      }
-    },
-    mounted() {
-      this.$store.commit('selectHome')
-      this.getURLs()
-      this.getFiles()
-      this.getRecords()
-      this.drawBatIcon(document.getElementById('write-record-icon'), '写留言')
-      // this.drawBatIcon(document.getElementById('chat-room-icon'), '聊天室')
-      this.drawBat(document.getElementById('write-record'))
+export default {
+  name: 'Home',
+  components: {Pagination},
+  data () {
+    return {
+      urls: [
+        {id: 0, owner: {id: 0}},
+        {id: 1, owner: {id: 1}},
+        {id: 2, owner: {id: 2}},
+        {id: 3, owner: {id: 3}},
+        {id: 4, owner: {id: 4}}
+      ],
+      files: [
+        {id: 0, owner: {id: 0}},
+        {id: 1, owner: {id: 1}},
+        {id: 2, owner: {id: 2}},
+        {id: 3, owner: {id: 3}},
+        {id: 4, owner: {id: 4}}
+      ],
+      record: '',
+      records: [
+        {id: 0},
+        {id: 1},
+        {id: 2},
+        {id: 3},
+        {id: 4}
+      ],
+      writeRecord: false
     }
+  },
+  computed: {
+    user () {
+      return this.$store.state.user
+    }
+  },
+  methods: {
+    getURLs () {
+      this.$store.dispatch('getHomeURLs')
+        .then(res => {
+          this.urls = res
+        })
+    },
+    getFiles () {
+      this.$store.dispatch('getHomeFiles')
+        .then(res => {
+          this.files = res
+        })
+    },
+    getRecords () {
+      this.$store.dispatch('getRecords')
+        .then(res => this.records = res)
+    },
+    postRecord () {
+      if (this.record) {
+        this.$store.dispatch('postRecord', this.record)
+          .then(res => {
+            this.record = ''
+            this.records.unshift(res.data.record)
+            if (this.records.length > 5) {
+              this.records.pop()
+            }
+            this.writeRecord = false
+          })
+          .catch(err => alert('内部错误'))
+      }
+    },
+    drawBatIcon (canvas, font) {
+      let c = canvas.getContext('2d')
+      c.beginPath()
+      c.strokeStyle = '#333'
+      c.lineWidth = 2
+      c.moveTo(80, 5)
+      c.bezierCurveTo(80, 15, 102, 15, 102, 3)
+      c.lineTo(160, 3)
+      c.quadraticCurveTo(130, 5, 130, 40)
+      c.quadraticCurveTo(80, 40, 80, 60)
+      c.moveTo(80, 5)
+      c.bezierCurveTo(80, 15, 58, 15, 58, 3)
+      c.lineTo(0, 3)
+      c.quadraticCurveTo(30, 5, 30, 40)
+      c.quadraticCurveTo(80, 40, 80, 60)
+      c.fillStyle = '#fff'
+      c.fill()
+      c.stroke()
+      c.fillStyle = '#333'
+      c.font = 'normal small-caps 300 14px arial'
+      c.textAlign = 'left'
+      c.textBaseline = 'middle'
+      c.fillText(font, 83, 30)
+      c.closePath()
+    },
+    drawBat (canvas) {
+      let c = canvas.getContext('2d')
+      c.beginPath()
+      c.strokeStyle = '#333'
+      c.lineWidth = 8
+      c.moveTo(320, 20)
+      c.bezierCurveTo(320, 60, 408, 60, 408, 12)
+      c.lineTo(640, 12)
+      c.quadraticCurveTo(520, 20, 520, 160)
+      c.quadraticCurveTo(320, 160, 320, 240)
+      c.moveTo(320, 20)
+      c.bezierCurveTo(320, 60, 232, 60, 232, 12)
+      c.lineTo(0, 12)
+      c.quadraticCurveTo(120, 20, 120, 160)
+      c.quadraticCurveTo(320, 160, 320, 240)
+      c.fillStyle = '#fff'
+      c.fill()
+      c.stroke()
+      c.closePath()
+    }
+  },
+  mounted () {
+    this.$store.commit('selectHome')
+    this.getURLs()
+    this.getFiles()
+    this.getRecords()
+    this.drawBatIcon(document.getElementById('write-record-icon'), '写留言')
+    // this.drawBatIcon(document.getElementById('chat-room-icon'), '聊天室')
+    this.drawBat(document.getElementById('write-record'))
   }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

@@ -23,72 +23,72 @@
 </template>
 
 <script>
-  export default {
-    name: "Register",
-    data(){
-      return{
-        password: '',
-        pswRight: false,
-        pswWrong: false,
-        rePassword: '',
-        repRight: false,
-        repWrong: false,
+export default {
+  name: 'Register',
+  data () {
+    return {
+      password: '',
+      pswRight: false,
+      pswWrong: false,
+      rePassword: '',
+      repRight: false,
+      repWrong: false
+    }
+  },
+  methods: {
+    validatePsw (val) {
+      const reg = /^[\x20-\x7E]*$/ // 包含所有ASCII字符（含空格）
+      if (val.length < 6 || val.length > 16) {
+        // this.addErrMsg('密码长度在6-16之间')
+        this.pswRight = false
+        this.pswWrong = true
+        return false
+      } else if (!reg.test(val)) {
+        // this.addErrMsg('密码不能特殊字符')
+        this.pswRight = false
+        this.pswWrong = true
+        return false
+      } else {
+        this.pswRight = true
+        this.pswWrong = false
+        return true
       }
     },
-    methods: {
-      validatePsw(val) {
-        const reg = /^[\x20-\x7E]*$/ // 包含所有ASCII字符（含空格）
-        if (val.length < 6 || val.length > 16) {
-          // this.addErrMsg('密码长度在6-16之间')
-          this.pswRight = false
-          this.pswWrong = true
-          return false
-        } else if (!reg.test(val)) {
-          // this.addErrMsg('密码不能特殊字符')
-          this.pswRight = false
-          this.pswWrong = true
-          return false
-        } else {
-          this.pswRight = true
-          this.pswWrong = false
-          return true
-        }
-      },
-      validateRep(val) {
-        if (val === this.password) {
-          this.repRight = true
-          this.repWrong = false
-          return true
-        } else {
-          this.repRight = false
-          this.repWrong = true
-          return false
-        }
-      },
-      reset(){
-        [this.password,this.rePassword] = ['','']
-      },
-      submit() {
-        let c = this.validatePsw(this.password)
-        let d = this.validateRep(this.rePassword)
-        if(c && d){
-          this.$store.dispatch('changePassword',this.password)
-        }
+    validateRep (val) {
+      if (val === this.password) {
+        this.repRight = true
+        this.repWrong = false
+        return true
+      } else {
+        this.repRight = false
+        this.repWrong = true
+        return false
       }
     },
-    mounted(){
-      this.$store.commit('selectChangePsw')
+    reset () {
+      [this.password, this.rePassword] = ['', '']
     },
-    watch:{
-      password(val) {
-        this.validatePsw(val)
-        this.validateRep(this.rePassword)
-      },
-      rePassword(val) {
-        this.validateRep(val)
+    submit () {
+      let c = this.validatePsw(this.password)
+      let d = this.validateRep(this.rePassword)
+      if (c && d) {
+        this.$store.dispatch('changePassword', this.password)
       }
     }
+  },
+  mounted () {
+    this.$store.commit('selectChangePsw')
+  },
+  watch: {
+    password (val) {
+      this.validatePsw(val)
+      this.validateRep(this.rePassword)
+    },
+    rePassword (val) {
+      this.validateRep(val)
+    }
   }
+}
 </script>
 
 <style scoped>

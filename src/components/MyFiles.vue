@@ -49,93 +49,92 @@
 </template>
 
 <script>
-  import Pagination from "./reusable/Pagination";
-  import { mapState } from 'vuex'
-  export default {
-    name: "MyFiles",
-    components: {Pagination},
-    computed: mapState([
-      'myLikeFileIds',
-    ]),
-    data() {
-      return {
-        publicFiles: [],
-        pubFileCount: 0,
-        pubPage: 1,
-        privateFiles: [],
-        priFileCount: 0,
-        priPage: 1,
+import Pagination from './reusable/Pagination'
+import { mapState } from 'vuex'
+export default {
+  name: 'MyFiles',
+  components: {Pagination},
+  computed: mapState([
+    'myLikeFileIds'
+  ]),
+  data () {
+    return {
+      publicFiles: [],
+      pubFileCount: 0,
+      pubPage: 1,
+      privateFiles: [],
+      priFileCount: 0,
+      priPage: 1
+    }
+  },
+  methods: {
+    unlikeFile (fid) {
+      this.$store.dispatch('unlikeFile', fid)
+    },
+    likeFile (fid) {
+      this.$store.dispatch('likeFile', fid)
+    },
+    deleteFile (fid) {
+      let con = window.confirm('确认删除吗？')
+      if (con) {
+        this.$store.dispatch('deleteFile', fid)
+          .then(res => {
+            let pub = 0
+            let pri = 0
+            for (let file of this.publicFiles) {
+              if (file.id === fid) {
+                this.publicFiles.splice(pub, 1)
+              }
+              pub++
+            }
+            for (let file of this.privateFiles) {
+              if (file.id === fid) {
+                this.privateFiles.splice(pri, 1)
+              }
+              pri++
+            }
+          })
       }
     },
-    methods: {
-      unlikeFile(fid) {
-        this.$store.dispatch('unlikeFile', fid)
-      },
-      likeFile(fid) {
-        this.$store.dispatch('likeFile', fid)
-      },
-      deleteFile(fid){
-        let con = window.confirm('确认删除吗？')
-        if(con){
-          this.$store.dispatch('deleteFile', fid)
-            .then(res=>{
-              let pub =0
-              let pri =0
-              for(let file of this.publicFiles){
-                if(file.id === fid){
-                  this.publicFiles.splice(pub,1)
-                }
-                pub++
-              }
-              for(let file of this.privateFiles){
-                if(file.id === fid){
-                  this.privateFiles.splice(pri,1)
-                }
-                pri++
-              }
-            })
-        }
-      },
-      setPubPage(page) {
-        this.pubPage = page
-      },
-      setPriPage(page) {
-        this.priPage = page
-      },
-      getPublicFiles() {
-        this.$store.dispatch('getMyPublicFiles',this.pubPage)
-          .then(res=>this.publicFiles = res)
-      },
-      getPrivateFiles() {
-        this.$store.dispatch('getMyPrivateFiles',this.priPage)
-          .then(res=>this.privateFiles = res)
-      },
-      getPubCount() {
-        this.$store.dispatch('getMyPublicFilesCount')
-          .then(res=>this.pubFileCount = res)
-      },
-      getPriCount() {
-        this.$store.dispatch('getMyPrivateFilesCount')
-          .then(res=>this.priFileCount = res)
-      }
+    setPubPage (page) {
+      this.pubPage = page
     },
-    mounted() {
-      this.$store.commit('selectMyFile')
+    setPriPage (page) {
+      this.priPage = page
+    },
+    getPublicFiles () {
+      this.$store.dispatch('getMyPublicFiles', this.pubPage)
+        .then(res => this.publicFiles = res)
+    },
+    getPrivateFiles () {
+      this.$store.dispatch('getMyPrivateFiles', this.priPage)
+        .then(res => this.privateFiles = res)
+    },
+    getPubCount () {
+      this.$store.dispatch('getMyPublicFilesCount')
+        .then(res => this.pubFileCount = res)
+    },
+    getPriCount () {
+      this.$store.dispatch('getMyPrivateFilesCount')
+        .then(res => this.priFileCount = res)
+    }
+  },
+  mounted () {
+    this.$store.commit('selectMyFile')
+    this.getPublicFiles()
+    this.getPrivateFiles()
+    this.getPubCount()
+    this.getPriCount()
+  },
+  watch: {
+    pubPage () {
       this.getPublicFiles()
-      this.getPrivateFiles()
-      this.getPubCount()
-      this.getPriCount()
-
     },
-    watch: {
-      pubPage(){
-        this.getPublicFiles()
-      },
-      priPage(){
-        this.getPrivateFiles()
-      }
+    priPage () {
+      this.getPrivateFiles()
     }
   }
+}
 </script>
 
 <style scoped>

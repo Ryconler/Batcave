@@ -25,30 +25,30 @@
 </template>
 
 <script>
-  import config from '../config'
-  export default {
-    name: "FileDetail",
-    data() {
-      return {
-        file: null
-      }
-    },
-    methods: {
-      getFile() {
-        const id = this.$route.params.id
-        this.$store.dispatch('getFile',id)
-          .then(res=> this.file = res)
-          .catch(err=> {})
-      },
-      download(){
-        window.open(config.baseURL + '/' +this.file.location)
-      }
-    },
-    mounted() {
-      this.$store.commit('selectNone')
-      this.getFile()
+import config from '../config'
+export default {
+  name: 'FileDetail',
+  data () {
+    return {
+      file: null
     }
+  },
+  methods: {
+    getFile () {
+      const id = this.$route.params.id
+      this.$store.dispatch('getFile', id)
+        .then(res => this.file = res)
+        .catch(err => {})
+    },
+    download () {
+      window.open(config.baseURL + '/' + this.file.location)
+    }
+  },
+  mounted () {
+    this.$store.commit('selectNone')
+    this.getFile()
   }
+}
 </script>
 
 <style scoped>

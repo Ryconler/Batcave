@@ -37,41 +37,41 @@
 </template>
 
 <script>
-  export default {
-    name: "Share",
-    data() {
-      return {
-        title: '',
-        http: 'http',
-        content: '',
-        type: 'asset'
-      }
+export default {
+  name: 'Share',
+  data () {
+    return {
+      title: '',
+      http: 'http',
+      content: '',
+      type: 'asset'
+    }
+  },
+  methods: {
+    reset () {
+      [this.title, this.http, this.content, this.type] = ['', 'http', '', 'asset']
     },
-    methods: {
-      reset(){
-        [this.title,this.http,this.content,this.type] = ['','http','','asset']
-      },
-      submit() {
-        const cntReg = /^((ht|f)tps?):\/\/[\w\-]+(\.[\w\-]+)+([\w\-.,@?^=%&:\/~+#]*[\w\-@?^=%&\/~+#])?$/;  //网址正则
-        if (this.title && this.http && this.content && this.type) {
-          if (this.title.length > 20) this.$store.commit('addErrMsg', '标题长度不超过20')
-          else if (!cntReg.test(this.http + '://' + this.content)) this.$store.commit('addErrMsg', 'URL地址格式不正确')
-          else {
-            const url = {
-              title:this.title,
-              content: this.http + '://' + this.content,
-              type:this.type
-            }
-            this.$store.dispatch('share',url)
+    submit () {
+      const cntReg = /^((ht|f)tps?):\/\/[\w\-]+(\.[\w\-]+)+([\w\-.,@?^=%&:\/~+#]*[\w\-@?^=%&\/~+#])?$/ // 网址正则
+      if (this.title && this.http && this.content && this.type) {
+        if (this.title.length > 20) this.$store.commit('addErrMsg', '标题长度不超过20')
+        else if (!cntReg.test(this.http + '://' + this.content)) this.$store.commit('addErrMsg', 'URL地址格式不正确')
+        else {
+          const url = {
+            title: this.title,
+            content: this.http + '://' + this.content,
+            type: this.type
           }
+          this.$store.dispatch('share', url)
         }
       }
-    },
-    mounted() {
-      this.$store.commit('selectNone')
     }
-
+  },
+  mounted () {
+    this.$store.commit('selectNone')
   }
+
+}
 </script>
 
 <style scoped>

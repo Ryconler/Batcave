@@ -18,7 +18,7 @@
 
 <script>
   export default {
-    name: "Pagination",
+    name: 'Pagination',
     props: ['limit', 'count'],
     data() {
       return {
@@ -60,4 +60,4 @@
 
 <style scoped>
 
-</style>
+</style>tr

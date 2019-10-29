@@ -25,7 +25,8 @@
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown" v-if="user" :class="{select: myLikeSelect||myURLSelect||myFileSelect||changePswSelect}">
+            <li class="dropdown" v-if="user"
+                :class="{select: myLikeSelect||myURLSelect||myFileSelect||changePswSelect}">
               <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
                 <img src="./assets/images/head_portrait.png" style="width: 20px;height: 20px; margin-right: 10px">{{
                 user.username }}<b class="caret"></b>
@@ -34,13 +35,15 @@
                 <li :class="{select: myLikeSelect}">
                   <router-link to="/my/likes">我的喜欢<img src="./assets/images/liked.png" style="width: 30px;">
                   </router-link>
-                </li >
+                </li>
                 <li :class="{select: myURLSelect}">
-                  <router-link to="/my/urls">我的链接<img src="./assets/images/url.png" style="margin-left:5px; width: 20px;">
+                  <router-link to="/my/urls">我的链接<img src="./assets/images/url.png"
+                                                      style="margin-left:5px; width: 20px;">
                   </router-link>
                 </li>
                 <li :class="{select: myFileSelect}">
-                  <router-link to="/my/files">我的文件<img src="./assets/images/file.png" style="margin-left:5px; width: 20px;">
+                  <router-link to="/my/files">我的文件<img src="./assets/images/file.png"
+                                                       style="margin-left:5px; width: 20px;">
                   </router-link>
                 </li>
                 <li :class="{select: changePswSelect}">
@@ -72,38 +75,40 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
-  export default {
-    name: 'App',
-    data() {
-      return {
-      }
-    },
-    computed:mapState([
-      'user',
-      'errorMessages',
-      'homeSelect',
-      'urlSelect',
-      'fileSelect',
-      'myLikeSelect',
-      'myURLSelect',
-      'myFileSelect',
-      'changePswSelect',
-      'login',
-      'register'
-    ]),
-    methods: {
-      checkLog(){
-        this.$store.dispatch('checkLog')
-      },
-      logout(){
-        this.$store.dispatch('logout')
-      }
-    },
-    mounted() {
-      this.checkLog()
+import {mapState} from 'vuex'
+
+export default {
+  name: 'App',
+  data () {
+    return {
+      html: `<p style="color:red;">123</p>`
     }
+  },
+  computed: mapState([
+    'user',
+    'errorMessages',
+    'homeSelect',
+    'urlSelect',
+    'fileSelect',
+    'myLikeSelect',
+    'myURLSelect',
+    'myFileSelect',
+    'changePswSelect',
+    'login',
+    'register'
+  ]),
+  methods: {
+    checkLog () {
+      this.$store.dispatch('checkLog')
+    },
+    logout () {
+      this.$store.dispatch('logout')
+    }
+  },
+  mounted () {
+    this.checkLog()
   }
+}
 </script>
 
 <style>
@@ -115,38 +120,45 @@
     background-attachment: fixed
   }
 
-  .navbar{
+  .navbar {
     border: none;
   }
-  .navbar li a{
+
+  .navbar li a {
     color: #9d9d9d;
   }
-  .navbar li a:hover{
+
+  .navbar li a:hover {
     color: aliceblue;
   }
+
   .select {
     border-bottom: 4px solid aliceblue;
-    color:aliceblue !important;
+    color: aliceblue !important;
   }
-  .select>a {
-    color:aliceblue !important;
+
+  .select > a {
+    color: aliceblue !important;
     font-weight: bold;
   }
-  .dropdown-menu{
+
+  .dropdown-menu {
     background: #222;
   }
-  .dropdown-menu li:hover a{
+
+  .dropdown-menu li:hover a {
     background: transparent;
   }
 
-  b.caret{
+  b.caret {
     margin-left: 10px;
   }
 
   /* 子组件中的公共样式 */
-  div.page-header{
+  div.page-header {
     border-bottom: none;
   }
+
   div.page-header h1 {
     display: inline;
   }
@@ -157,7 +169,6 @@
     font-weight: bold;
     color: #ff5809;
   }
-
 
   ul.category li {
     display: inline;
@@ -172,7 +183,6 @@
   ul.category li.as a:hover {
     text-decoration: none;
   }
-
 
   ul.posts {
     list-style-type: none;

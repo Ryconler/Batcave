@@ -28,53 +28,58 @@
 </template>
 
 <script>
-  export default {
-    name: "Login",
-    data(){
-      return{
-        username: '',
-        password: '',
-        hasSent: false,
-        sendCD: 60,
-        info: ''
-      }
-    },
-    methods:{
-      reset(){
-        [this.username,this.password] = ['','']
-      },
-      submit() {
-        if (this.username && this.password) {
-          const loginInfo = {
-            username: this.username,
-            password: this.password
-          }
-          this.$store.dispatch('login',loginInfo)
-        }
-      },
-      sendTmpPsw(){
-        if(this.username && !this.hasSent){
-          this.$store.dispatch('sendTmpPsw',this.username)
-          this.info = '我们向您的邮箱发送了一份邮件，请注意查收。'
-          this.hasSent = true
-          let t = setInterval(()=> {
-            this.sendCD = this.sendCD -1
-            if (this.sendCD === 0){
-              clearInterval(t)
-              this.hasSent = false
-              this.sendCD = 60
-              this.info = ''
-            }
-          },1000)
-        }else {
-          this.info = '请输入用户名'
-        }
-      }
-    },
-    mounted() {
-      this.$store.commit('selecLogin')
+export default {
+  name: 'Login',
+  data () {
+    return {
+      username: '',
+      password: '',
+      hasSent: false,
+      sendCD: 60,
+      info: ''
     }
+  },
+  methods: {
+    reset () {
+      [this.username, this.password] = ['', '']
+    },
+    submit () {
+      if (this.username && this.password) {
+        const loginInfo = {
+          username: this.username,
+          password: this.password
+        }
+        this.$store.dispatch('login', loginInfo)
+      }
+    },
+    sendTmpPsw () {
+      if (this.username && !this.hasSent) {
+        this.$store.dispatch('sendTmpPsw', this.username)
+        this.info = '我们向您的邮箱发送了一份邮件，请注意查收。'
+        this.hasSent = true
+        let t = setInterval(() => {
+          this.sendCD = this.sendCD - 1
+          if (this.sendCD === 0) {
+            clearInterval(t)
+            this.hasSent = false
+            this.sendCD = 60
+            this.info = ''
+          }
+        }, 1000)
+      } else {
+        this.info = '请输入用户名'
+      }
+    }
+  },
+  created () {
+    console.log('created')
+  },
+  mounted () {
+    console.log('mount')
+
+    this.$store.commit('selecLogin')
   }
+}
 </script>
 
 <style scoped>
