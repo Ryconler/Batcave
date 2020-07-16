@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import config from '../config'
 export default {
   name: 'FileDetail',
   data () {
@@ -41,7 +40,7 @@ export default {
         .catch(err => {})
     },
     download () {
-      window.open(config.baseURL + '/' + this.file.location)
+      window.open('/' + this.file.location)
     }
   },
   mounted () {

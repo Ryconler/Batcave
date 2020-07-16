@@ -1,10 +1,8 @@
 import axios from 'axios'
 import router from '../router'
-import config from '../config'
 
 axios.defaults.withCredentials = true
 
-axios.defaults.baseURL = config.baseURL
 axios.interceptors.request.use(function (config) {
   return config
 }, function (error) {
@@ -22,7 +20,6 @@ axios.interceptors.response.use(function (response) {
 })
 // 新建一个axios实例专门用来传multipart/form-data类型的数据
 const axiosForm = axios.create({
-  baseURL: config.baseURL,
   headers: {'Content-Type': 'multipart/form-data'}
 })
 axiosForm.interceptors.response.use(function (response) {
