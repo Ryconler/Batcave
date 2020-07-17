@@ -40,7 +40,7 @@ export default {
         .catch(err => {})
     },
     download () {
-      window.open('/' + this.file.location)
+      window.open('/uploads/' + this.file.location)
     }
   },
   mounted () {
