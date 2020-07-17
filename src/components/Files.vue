@@ -43,16 +43,6 @@ export default {
   data () {
     return {
       files: [
-        {id: 0, owner: {id: 0}},
-        {id: 1, owner: {id: 1}},
-        {id: 2, owner: {id: 2}},
-        {id: 3, owner: {id: 3}},
-        {id: 4, owner: {id: 4}},
-        {id: 5, owner: {id: 5}},
-        {id: 6, owner: {id: 6}},
-        {id: 7, owner: {id: 7}},
-        {id: 8, owner: {id: 8}},
-        {id: 9, owner: {id: 9}}
       ],
       fileCount: 0,
       page: 1

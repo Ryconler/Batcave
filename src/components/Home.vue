@@ -70,26 +70,11 @@ export default {
   data () {
     return {
       urls: [
-        {id: 0, owner: {id: 0}},
-        {id: 1, owner: {id: 1}},
-        {id: 2, owner: {id: 2}},
-        {id: 3, owner: {id: 3}},
-        {id: 4, owner: {id: 4}}
       ],
       files: [
-        {id: 0, owner: {id: 0}},
-        {id: 1, owner: {id: 1}},
-        {id: 2, owner: {id: 2}},
-        {id: 3, owner: {id: 3}},
-        {id: 4, owner: {id: 4}}
       ],
       record: '',
       records: [
-        {id: 0},
-        {id: 1},
-        {id: 2},
-        {id: 3},
-        {id: 4}
       ],
       writeRecord: false
     }
